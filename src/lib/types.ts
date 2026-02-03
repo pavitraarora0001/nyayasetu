@@ -14,6 +14,7 @@ export interface LegalSection {
 }
 
 export interface IncidentAnalysis {
+    id?: string;
     summary: string;
     classification: {
         type: string;

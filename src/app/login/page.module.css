@@ -1,0 +1,111 @@
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    max-width: 400px;
+    border-top: 5px solid var(--color-primary);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.header h2 {
+    color: var(--color-primary);
+    margin-bottom: 0.25rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.group label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
+.group input {
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.loginBtn {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.loginBtn:hover {
+    background: #1e40af;
+}
+
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.footer {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.footer a {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.footer a:hover {
+    color: var(--color-primary);
+}

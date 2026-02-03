@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import FIRDraftEditor from "@/components/forms/FIRDraftEditor";
 import { IncidentAnalysis } from "@/lib/types";
@@ -11,6 +11,24 @@ export default function PolicePage() {
     const [description, setDescription] = useState("");
     const [analysis, setAnalysis] = useState<IncidentAnalysis | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [incidents, setIncidents] = useState<any[]>([]);
+
+    // Fetch incidents on mount
+    useEffect(() => {
+        fetchIncidents();
+    }, [view]);
+
+    const fetchIncidents = async () => {
+        try {
+            const res = await fetch("/api/incidents");
+            if (res.ok) {
+                const data = await res.json();
+                setIncidents(data);
+            }
+        } catch (e) {
+            console.error("Failed to fetch history");
+        }
+    };
 
     const handleAnalyze = async () => {
         if (!description) return;
@@ -24,6 +42,7 @@ export default function PolicePage() {
             const data = await res.json();
             setAnalysis(data);
             setView("editor");
+            fetchIncidents(); // Refresh list
         } catch (err) {
             alert("Analysis failed");
         } finally {
@@ -59,16 +78,16 @@ export default function PolicePage() {
                         <h1>Dashboard</h1>
                         <div className={styles.stats}>
                             <div className={styles.statCard}>
-                                <h3>Pending FIRs</h3>
-                                <p>12</p>
+                                <h3>Total Incidents</h3>
+                                <p>{incidents.length}</p>
                             </div>
                             <div className={styles.statCard}>
                                 <h3>Processed Today</h3>
-                                <p>5</p>
+                                <p>{incidents.filter(i => new Date(i.createdAt).toDateString() === new Date().toDateString()).length}</p>
                             </div>
                             <div className={styles.statCard}>
-                                <h3>Court Dates</h3>
-                                <p>3</p>
+                                <h3>Drafting</h3>
+                                <p>{incidents.filter(i => i.status === 'DRAFTING').length}</p>
                             </div>
                         </div>
 
@@ -77,25 +96,21 @@ export default function PolicePage() {
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Description</th>
                                         <th>Date</th>
-                                        <th>Type</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>#INC-2024-001</td>
-                                        <td>Oct 24, 2024</td>
-                                        <td>Theft</td>
-                                        <td><span className={styles.tag}>Drafting</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>#INC-2024-002</td>
-                                        <td>Oct 23, 2024</td>
-                                        <td>Assault</td>
-                                        <td><span className={styles.tagSuccess}>Filed</span></td>
-                                    </tr>
+                                    {incidents.length > 0 ? incidents.map((inc) => (
+                                        <tr key={inc.id}>
+                                            <td title={inc.description}>{inc.description.substring(0, 40)}...</td>
+                                            <td>{new Date(inc.createdAt).toLocaleDateString()}</td>
+                                            <td><span className={styles.tag}>{inc.status}</span></td>
+                                        </tr>
+                                    )) : (
+                                        <tr><td colSpan={3}>No incidents found.</td></tr>
+                                    )}
                                 </tbody>
                             </table>
                         </div>

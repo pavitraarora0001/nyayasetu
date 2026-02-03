@@ -59,6 +59,30 @@ export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps)
         }
     };
 
+    const handleSave = async () => {
+        if (!analysis.id) {
+            alert("Error: No Incident ID found. Cannot save.");
+            return;
+        }
+
+        try {
+            const res = await fetch("/api/incidents", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: analysis.id,
+                    analysis: analysis,
+                    status: "DRAFT_SAVED"
+                })
+            });
+
+            if (res.ok) alert("Draft updated successfully in Database!");
+            else alert("Failed to save draft.");
+        } catch (e) {
+            alert("Error saving draft.");
+        }
+    };
+
     return (
         <div className={styles.container}>
             {/* Header */}
@@ -143,7 +167,7 @@ export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps)
 
             {/* Actions */}
             <div className={styles.actions}>
-                <button className={styles.saveBtn} onClick={() => alert("Draft Saved to Database!")}>
+                <button className={styles.saveBtn} onClick={handleSave}>
                     💾 Save Draft
                 </button>
                 <button className={styles.printBtn} onClick={handleExportPDF}>

@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import { MASTER_SYSTEM_PROMPT } from '@/lib/prompts';
 import { IncidentAnalysis } from '@/lib/types';
-
-export const runtime = 'edge'; // Optional: Use Edge Runtime if desired, but Node is fine.
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: Request) {
     try {
@@ -113,7 +111,17 @@ export async function POST(request: Request) {
             };
         }
 
-        return NextResponse.json(mockAnalysis);
+        // [NEW] Persist to Database
+        const savedIncident = await prisma.incident.create({
+            data: {
+                description,
+                status: userType === 'police' ? 'DRAFTING' : 'PENDING',
+                analysis: JSON.stringify(mockAnalysis)
+            }
+        });
+
+        // Return the analysis + the DB ID
+        return NextResponse.json({ ...mockAnalysis, id: savedIncident.id });
 
     } catch (error) {
         console.error('Analysis failed:', error);

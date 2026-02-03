@@ -105,8 +105,10 @@
 
 .statCard h3 {
     font-size: 0.875rem;
-    color: var(--color-text-muted);
+    color: #4B5563;
+    /* Darker Gray */
     margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 .statCard p {
@@ -142,11 +144,24 @@
     margin-top: 1rem;
 }
 
-.table th,
+.table th {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid var(--color-border);
+    color: #111827;
+    /* Near Black */
+    font-weight: 700;
+    font-size: 0.875rem;
+    background: #F9FAFB;
+}
+
 .table td {
     padding: 0.75rem;
     text-align: left;
     border-bottom: 1px solid var(--color-border);
+    color: #374151;
+    /* Dark Gray */
+    font-size: 0.875rem;
 }
 
 .tag {

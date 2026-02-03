@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Incident {
-  id          String   @id @default(uuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   description String
   status      String   @default("PENDING") // PENDING, PROCESSED, FILED
   analysis    String   // Store JSON string of IncidentAnalysis

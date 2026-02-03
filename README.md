@@ -8,20 +8,22 @@
 ## 🌟 Key Features
 
 ### 👥 Public Portal
-- **Incident Narration**: Simple text interface for citizens to report crimes/incidents.
+- **Incident Narration**: Simple text interface or **Voice Input** (English/Hindi).
+- **Multi-modal Evidence**: Upload images for "Visual Analysis" (Gemini Vision simulation).
 - **AI Analysis**: Instantly provides:
   - Applicable Legal Sections (BNS & IPC).
   - Cognizable / Non-Cognizable Classification.
   - Required procedural steps (FIR, Medical Exam, etc.).
-- **Multilingual UI**: Toggle between English and Hindi.
+- **Multilingual UI**: Deep support for English and Hindi.
 
 ### 👮 Police Panel
+- **Secure Access**: Protected by Authentication (`officer` / `jaihind`).
 - **Dashboard**: Overview of pending and processed cases.
 - **FIR Drafting Assistant**:
   - Auto-generated FIR drafts based on incident facts.
-  - **Editable Sections**: Officers can add/remove sections to ensure accuracy.
-  - **PDF Export**: Download professional FIR drafts for official use.
-- **Evidence Checklist**: AI flags missing critical information (Time, Weapon, etc.).
+  - **Editable Sections**: Officers can add/remove sections.
+  - **PDF Export**: Download professional FIR drafts.
+- **Evidence Checklist**: AI flags missing critical information.
 
 ## 🚀 Getting Started
 

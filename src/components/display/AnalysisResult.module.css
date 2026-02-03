@@ -41,6 +41,30 @@
     color: var(--color-text-main);
 }
 
+.visualAnalysis {
+    background: #f0fdf4;
+    border: 1px solid #16a34a;
+    color: #166534;
+    padding: 1rem;
+    border-radius: 8px;
+    grid-column: 1 / -1;
+    margin-bottom: 1rem;
+}
+
+.visualAnalysis h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

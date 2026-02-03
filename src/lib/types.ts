@@ -29,5 +29,6 @@ export interface IncidentAnalysis {
         legal_steps: string;
     };
     missing_facts: string[];
+    visual_analysis?: string; // Optional field for image insights
     confidence_score: 'High' | 'Medium' | 'Low';
 }

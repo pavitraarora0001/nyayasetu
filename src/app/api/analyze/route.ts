@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { description, userType } = body;
+        const { description, userType, image } = body; // Accept image
 
         if (!description) {
             return NextResponse.json(
@@ -27,6 +27,12 @@ export async function POST(request: Request) {
         let mockAnalysis: IncidentAnalysis;
 
         const lowerDesc = description.toLowerCase();
+
+        // Mock Visual Analysis Result
+        let visualFindings = "";
+        if (image) {
+            visualFindings = "Visual analysis of the uploaded evidence suggests: 1. Presence of physical bruises consistent with blunt force. 2. A torn bag strap indicating snatching attempt.";
+        }
 
         if (lowerDesc.includes('theft') || lowerDesc.includes('stole') || lowerDesc.includes('snatch') || lowerDesc.includes('rob')) {
             mockAnalysis = {
@@ -57,7 +63,8 @@ export async function POST(request: Request) {
                     legal_steps: "Police is bound to register an FIR for cognizable offences like theft."
                 },
                 missing_facts: ["Exact time of incident", "Description of the accused"],
-                confidence_score: "High"
+                confidence_score: "High",
+                visual_analysis: visualFindings || undefined
             };
         } else if (lowerDesc.includes('hit') || lowerDesc.includes('beat') || lowerDesc.includes('attack') || lowerDesc.includes('hurt')) {
             mockAnalysis = {

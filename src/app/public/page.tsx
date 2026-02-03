@@ -12,7 +12,7 @@ export default function PublicPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [lang, setLang] = useState<"en" | "hi">("en");
 
-    const handleAnalyze = async (description: string) => {
+    const handleAnalyze = async (description: string, image?: string) => {
         setIsLoading(true);
         setAnalysis(null);
 
@@ -20,7 +20,7 @@ export default function PublicPage() {
             const res = await fetch("/api/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ description, userType: "public" }),
+                body: JSON.stringify({ description, userType: "public", image }),
             });
 
             if (!res.ok) throw new Error("Analysis failed");
@@ -28,7 +28,7 @@ export default function PublicPage() {
             const data = await res.json();
             setAnalysis(data);
         } catch (error) {
-            console.error(error);
+            console.error("Analysis failed", error);
             alert("Something went wrong. Please try again.");
         } finally {
             setIsLoading(false);
@@ -62,10 +62,10 @@ export default function PublicPage() {
                 </div>
 
                 {!analysis ? (
-                    <IncidentForm onAnalyze={handleAnalyze} isLoading={isLoading} />
+                    <IncidentForm onAnalyze={handleAnalyze} isLoading={isLoading} lang={lang} />
                 ) : (
                     <div className={styles.resultContainer}>
-                        <AnalysisResult analysis={analysis} />
+                        <AnalysisResult analysis={analysis} lang={lang} />
                         <div className={styles.resetContainer}>
                             <button onClick={() => setAnalysis(null)} className={styles.resetBtn}>
                                 Report Another Incident

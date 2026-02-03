@@ -1,0 +1,142 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    border-top: 4px solid var(--color-primary);
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.heading {
+    color: var(--color-primary);
+    font-size: 1.25rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+.text {
+    line-height: 1.6;
+    color: var(--color-text-main);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.card h4 {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.cardDanger {
+    border-left: 4px solid var(--color-error);
+    background: #FEF2F2;
+}
+
+.cardSafe {
+    border-left: 4px solid var(--color-success);
+    background: #ECFDF5;
+}
+
+.cardNeutral {
+    border-left: 4px solid var(--color-secondary);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table th {
+    background: var(--color-background);
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.sectionCode {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.guidanceList {
+    list-style: none;
+    background: var(--color-background);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.guidanceList li {
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.guidanceList li:last-child {
+    margin-bottom: 0;
+}
+
+.warningBox {
+    background: #FFFBEB;
+    border: 1px solid #FCD34D;
+    color: #92400E;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.disclaimer {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin-top: 1rem;
+    font-style: italic;
+}

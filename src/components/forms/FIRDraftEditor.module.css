@@ -1,0 +1,135 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 1rem;
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.high {
+    background: #ECFDF5;
+    color: #059669;
+}
+
+.medium {
+    background: #FFFBEB;
+    color: #D97706;
+}
+
+.low {
+    background: #FEF2F2;
+    color: #DC2626;
+}
+
+.panel {
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.panel h4 {
+    margin-bottom: 1rem;
+    color: var(--color-primary-light);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.summaryEdit {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+    font-family: inherit;
+    min-height: 100px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table th {
+    background: #F8FAFC;
+    font-size: 0.85rem;
+}
+
+.deleteBtn {
+    background: none;
+    border: none;
+    color: var(--color-error);
+    cursor: pointer;
+    font-size: 0.85rem;
+    text-decoration: underline;
+}
+
+.editRow input,
+.editRow select {
+    width: 100%;
+    padding: 0.4rem;
+    border: 1px solid var(--color-border);
+}
+
+.addBtn {
+    background: var(--color-secondary);
+    border: none;
+    padding: 0.4rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.missingItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.saveBtn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.printBtn {
+    background: white;
+    border: 1px solid var(--color-border);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}

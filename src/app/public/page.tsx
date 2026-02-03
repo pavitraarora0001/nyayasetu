@@ -11,6 +11,9 @@ export default function PublicPage() {
     const [analysis, setAnalysis] = useState<IncidentAnalysis | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [lang, setLang] = useState<"en" | "hi">("en");
+    const [trackId, setTrackId] = useState("");
+    const [statusResult, setStatusResult] = useState<any>(null);
+    const [isTracking, setIsTracking] = useState(false);
 
     const handleAnalyze = async (description: string, image?: string) => {
         setIsLoading(true);
@@ -32,6 +35,26 @@ export default function PublicPage() {
             alert("Something went wrong. Please try again.");
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleTrack = async () => {
+        if (!trackId) return;
+        setIsTracking(true);
+        setStatusResult(null);
+        try {
+            const res = await fetch("/api/incidents");
+            if (res.ok) {
+                const data = await res.json();
+                // Client-side filtering for demo since API returns all
+                // In real app, we'd have /api/incidents/[id]
+                const found = data.find((i: any) => i.id === trackId.trim());
+                setStatusResult(found || "NOT_FOUND");
+            }
+        } catch (e) {
+            alert("Tracking failed");
+        } finally {
+            setIsTracking(false);
         }
     };
 
@@ -61,7 +84,37 @@ export default function PublicPage() {
                     </p>
                 </div>
 
+                {/* Track Status Section */}
+                <div className={styles.trackSection}>
+                    <h3>{lang === "en" ? "📍 Track Your Application" : "📍 अपना आवेदन ट्रैक करें"}</h3>
+                    <input
+                        type="text"
+                        placeholder={lang === "en" ? "Enter Case ID (e.g., demo-id-123456)" : "केस आईडी दर्ज करें"}
+                        value={trackId}
+                        onChange={(e) => setTrackId(e.target.value)}
+                        className={styles.trackInput}
+                    />
+                    <button onClick={handleTrack} disabled={isTracking} className={styles.trackBtn}>
+                        {isTracking ? "Checking..." : (lang === "en" ? "Track Status" : "स्थिति ट्रैक करें")}
+                    </button>
+
+                    {statusResult && (
+                        <div className={styles.statusResult}>
+                            {statusResult === "NOT_FOUND" ? (
+                                <p style={{ color: 'red' }}>❌ {lang === "en" ? "Case not found" : "केस नहीं मिला"}</p>
+                            ) : (
+                                <div>
+                                    <p><strong>Status:</strong> <span className={styles.statusBadge}>{statusResult.status}</span></p>
+                                    <p><strong>Description:</strong> {statusResult.description.substring(0, 60)}...</p>
+                                    <p><small>Last Updated: {new Date(statusResult.updatedAt).toLocaleDateString()}</small></p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
                 {!analysis ? (
+
                     <IncidentForm onAnalyze={handleAnalyze} isLoading={isLoading} lang={lang} />
                 ) : (
                     <div className={styles.resultContainer}>

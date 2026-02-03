@@ -75,42 +75,68 @@ export default function PolicePage() {
             <main className={styles.main}>
                 {view === "dashboard" && (
                     <div className={styles.dashboard}>
-                        <h1>Dashboard</h1>
+                        <div className={styles.headerRow}>
+                            <h1>Dashboard</h1>
+                            <p className={styles.date}>{new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        </div>
+
                         <div className={styles.stats}>
                             <div className={styles.statCard}>
                                 <h3>Total Incidents</h3>
-                                <p>{incidents.length}</p>
+                                <p>1,248</p>
+                                <span className={`${styles.statTrend} ${styles.trendUp}`}>↑ 12% this week</span>
                             </div>
                             <div className={styles.statCard}>
                                 <h3>Processed Today</h3>
-                                <p>{incidents.filter(i => new Date(i.createdAt).toDateString() === new Date().toDateString()).length}</p>
+                                <p>14</p>
+                                <span className={`${styles.statTrend} ${styles.trendUp}`}>↑ 4 from yesterday</span>
                             </div>
                             <div className={styles.statCard}>
-                                <h3>Drafting</h3>
-                                <p>{incidents.filter(i => i.status === 'DRAFTING').length}</p>
+                                <h3>Pending Action</h3>
+                                <p>8</p>
+                                <span className={`${styles.statTrend} ${styles.trendDown}`}>↓ 2 resolved</span>
                             </div>
                         </div>
 
                         <div className={styles.recentActivity}>
-                            <h3>Recent Incident Reports</h3>
+                            <div className={styles.sectionHeader}>
+                                <h3>Recent Incident Reports</h3>
+                                <button className={styles.viewBtn}>View All History</button>
+                            </div>
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
+                                        <th>Case ID</th>
+                                        <th>Category</th>
                                         <th>Description</th>
+                                        <th>Priority</th>
                                         <th>Date</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {incidents.length > 0 ? incidents.map((inc) => (
-                                        <tr key={inc.id}>
-                                            <td title={inc.description}>{inc.description.substring(0, 40)}...</td>
-                                            <td>{new Date(inc.createdAt).toLocaleDateString()}</td>
-                                            <td><span className={styles.tag}>{inc.status}</span></td>
+                                    {[
+                                        { id: "CASE-2024-001", cat: "Theft", desc: "Phone snatching at CP Outer Circle", date: "2024-02-03", status: "PENDING", priority: "High" },
+                                        { id: "CASE-2024-002", cat: "Cyber", desc: "Online payment fraud reporting", date: "2024-02-02", status: "DRAFTING", priority: "Medium" },
+                                        { id: "CASE-2024-003", cat: "Assault", desc: "Physical altercation near Metro Station", date: "2024-02-02", status: "FILED", priority: "High" },
+                                        { id: "CASE-2024-004", cat: "Lost", desc: "Lost wallet containing documents", date: "2024-02-01", status: "PROCESSING", priority: "Low" },
+                                        { id: "CASE-2024-005", cat: "Theft", desc: "Bicycle theft from residential area", date: "2024-01-31", status: "FILED", priority: "Medium" },
+                                    ].map((inc, i) => (
+                                        <tr key={i}>
+                                            <td style={{ fontWeight: 600 }}>{inc.id}</td>
+                                            <td>{inc.cat}</td>
+                                            <td title={inc.desc}>{inc.desc}</td>
+                                            <td><span className={styles[`priority${inc.priority}`]}>{inc.priority}</span></td>
+                                            <td>{inc.date}</td>
+                                            <td>
+                                                <span className={`${styles.tag} ${styles[`status${inc.status.charAt(0) + inc.status.slice(1).toLowerCase()}`]}`}>
+                                                    {inc.status}
+                                                </span>
+                                            </td>
+                                            <td><button className={styles.viewBtn}>View</button></td>
                                         </tr>
-                                    )) : (
-                                        <tr><td colSpan={3}>No incidents found.</td></tr>
-                                    )}
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

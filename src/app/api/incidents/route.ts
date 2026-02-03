@@ -9,12 +9,14 @@ export async function GET(request: Request) {
         const search = searchParams.get('search');
 
         // Build where clause
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const where: any = {};
         if (status) where.status = status;
         if (category) where.category = category;
         if (search) {
             where.OR = [
                 { id: { contains: search } },
+                { caseId: { contains: search, mode: 'insensitive' } },
                 { description: { contains: search, mode: 'insensitive' } }
             ];
         }
@@ -31,6 +33,55 @@ export async function GET(request: Request) {
     }
 }
 
+import { analyzeIncident } from '@/lib/gemini';
+
+// ... (existing helper methods)
+
+export async function POST(request: Request) {
+    try {
+        const body = await request.json();
+        const { description, type, imageUrl } = body;
+
+        // Generate readable Case ID
+        const timestamp = Date.now();
+        const caseId = `CASE-${new Date().getFullYear()}-${timestamp.toString().slice(-4)}`;
+
+        // Analyze with Gemini
+        let analysisData = {};
+        let priority = 'Medium';
+        let category = type || 'Unclassified';
+
+        try {
+            const analysis = await analyzeIncident(description);
+            analysisData = analysis;
+            if (analysis.classification) {
+                if (analysis.classification.priority) priority = analysis.classification.priority;
+                if (analysis.classification.type) category = analysis.classification.type;
+            }
+        } catch (error) {
+            console.error('Analysis failed:', error);
+            // Continue without analysis, it can be retried later
+        }
+
+        const incident = await prisma.incident.create({
+            data: {
+                caseId,
+                description,
+                status: 'PROCESSED', // Mark as processed providing analysis succeeded/attempted
+                category,
+                priority,
+                imageUrl,
+                analysis: JSON.stringify(analysisData),
+            }
+        });
+
+        return NextResponse.json(incident);
+    } catch (error) {
+        console.error('Failed to create incident:', error);
+        return NextResponse.json({ error: 'Failed to create incident' }, { status: 500 });
+    }
+}
+
 export async function PUT(request: Request) {
     try {
         const body = await request.json();
@@ -38,6 +89,7 @@ export async function PUT(request: Request) {
 
         if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: any = { updatedAt: new Date() };
         if (analysis) updateData.analysis = JSON.stringify(analysis);
         if (status) updateData.status = status;

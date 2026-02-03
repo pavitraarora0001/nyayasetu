@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { IncidentAnalysis } from '@/lib/types';
-import { analyzeWithGemini } from '@/lib/ai';
+import { analyzeIncident } from '@/lib/gemini';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: Request) {
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         let mockAnalysis: IncidentAnalysis | null = null;
 
         // 1. Try Real AI
-        mockAnalysis = await analyzeWithGemini(description, image);
+        mockAnalysis = await analyzeIncident(description, image);
 
         // 2. Fallback to Mock Engine if AI fails or no key
         if (!mockAnalysis) {

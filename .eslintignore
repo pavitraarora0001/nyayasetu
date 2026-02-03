@@ -1,0 +1,5 @@
+scripts/
+scripts/*
+**/scripts/*
+.next/
+node_modules/

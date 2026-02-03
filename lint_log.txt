@@ -1,0 +1,120 @@
+﻿
+> nyayasetu@0.1.0 lint
+> eslint
+
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\check-db.js
+   5:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  20:30  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\debug-prisma.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\fix-prisma.js
+   1:22  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  16:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\generate-client.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:22  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\migrate-data.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\test-api.js
+  1:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\test-env.js
+  1:1  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\scripts\verify-db.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\app\api\incidents\[id]\route.ts
+  32:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\app\api\incidents\route.ts
+  12:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  91:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\app\police\layout.tsx
+  19:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\app\police\layout.tsx:19:13
+  17 |             router.push("/login");
+  18 |         } else {
+> 19 |             setIsAuthorized(true);
+     |             ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |         }
+  21 |     }, [router]);
+  22 |  react-hooks/set-state-in-effect
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\app\police\page.tsx
+    7:8   warning  'Link' is defined but never used                                 @typescript-eslint/no-unused-vars
+   14:48  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   28:18  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+   46:18  warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+   92:96  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  127:50  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\app\public\page.tsx
+  16:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\components\display\AnalysisResult.tsx
+  22:11  warning  'getConfidenceColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  22:33  warning  'score' is defined but never used                        @typescript-eslint/no-unused-vars
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\components\forms\FIRDraftEditor.tsx
+  104:18   warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  160:143  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\components\forms\IncidentForm.tsx
+  81:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\hooks\useSpeechRecognition.ts
+  11:52  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  15:50  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  15:87  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  17:17  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\hooks\useSpeechRecognition.ts:17:17
+  15 |             const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  16 |             if (SpeechRecognition) {
+> 17 |                 setIsSupported(true);
+     |                 ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  18 |                 const recog = new SpeechRecognition();
+  19 |                 recog.continuous = true;
+  20 |                 recog.interimResults = true;  react-hooks/set-state-in-effect
+  23:42  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  39:41  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  47:8   warning  React Hook useEffect has a missing dependency: 'onResult'. Either include it or remove the dependency array. If 'onResult' changes too often, find the parent component that defines it and wrap that definition in useCallback                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\lib\gemini.ts
+  49:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:63  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\PAVITRA\OneDrive\Desktop\nyayasetu\src\lib\json-db.ts
+   3:10  warning  'IncidentAnalysis' is defined but never used  @typescript-eslint/no-unused-vars
+  51:14  warning  'e' is defined but never used                 @typescript-eslint/no-unused-vars
+
+Γ£û 45 problems (34 errors, 11 warnings)
+

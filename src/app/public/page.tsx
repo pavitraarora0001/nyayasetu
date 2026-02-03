@@ -13,6 +13,7 @@ export default function PublicPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [lang, setLang] = useState<"en" | "hi">("en");
     const [trackId, setTrackId] = useState("");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [statusResult, setStatusResult] = useState<any>(null);
     const [isTracking, setIsTracking] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);

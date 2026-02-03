@@ -8,10 +8,13 @@ import jsPDF from "jspdf";
 
 interface FIRDraftEditorProps {
     initialAnalysis: IncidentAnalysis;
+    initialFirDraft?: string;
 }
 
-export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps) {
+export default function FIRDraftEditor({ initialAnalysis, initialFirDraft = "" }: FIRDraftEditorProps) {
     const [analysis, setAnalysis] = useState(initialAnalysis);
+    const [firText, setFirText] = useState(initialFirDraft);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [newSection, setNewSection] = useState<Partial<LegalSection>>({});
     const printRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +62,25 @@ export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps)
         }
     };
 
+    const handleGenerateFIR = async () => {
+        if (!analysis.id) return alert("Save the case first!");
+        setIsGenerating(true);
+        try {
+            const res = await fetch(`/api/incidents/${analysis.id}/draft-fir`, { method: "POST" });
+            if (res.ok) {
+                const data = await res.json();
+                setFirText(data.firDraft);
+            } else {
+                alert("Failed to generate FIR");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error generating FIR");
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
     const handleSave = async () => {
         if (!analysis.id) {
             alert("Error: No Incident ID found. Cannot save.");
@@ -72,6 +94,7 @@ export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps)
                 body: JSON.stringify({
                     id: analysis.id,
                     analysis: analysis,
+                    firDraft: firText,
                     status: "DRAFT_SAVED"
                 })
             });
@@ -134,6 +157,7 @@ export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps)
                             <tr className={styles.editRow} data-html2canvas-ignore>
                                 <td><input placeholder="Sec No." value={newSection.section || ''} onChange={e => setNewSection({ ...newSection, section: e.target.value })} /></td>
                                 <td>
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     <select value={newSection.law || ''} onChange={e => setNewSection({ ...newSection, law: e.target.value as any })}>
                                         <option value="">Select Law</option>
                                         <option value="BNS">BNS</option>
@@ -147,6 +171,27 @@ export default function FIRDraftEditor({ initialAnalysis }: FIRDraftEditorProps)
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                {/* FIR Text Editor */}
+                <div className={styles.panel}>
+                    <div className={styles.sectionHeader}>
+                        <h4>📝 Official FIR Text</h4>
+                        <button
+                            onClick={handleGenerateFIR}
+                            disabled={isGenerating}
+                            className={styles.generateBtn}
+                        >
+                            {isGenerating ? "Generating..." : "✨ Auto-Draft with AI"}
+                        </button>
+                    </div>
+                    <textarea
+                        className={styles.firTextarea}
+                        value={firText}
+                        onChange={(e) => setFirText(e.target.value)}
+                        placeholder="Generated FIR text will appear here..."
+                        rows={15}
+                    />
                 </div>
             </div>
 

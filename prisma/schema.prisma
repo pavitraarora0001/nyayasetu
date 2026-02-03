@@ -13,6 +13,9 @@ model Incident {
   status      String   @default("PENDING") // PENDING, DRAFTING, PROCESSED, FILED
   analysis    String   // Store JSON string of IncidentAnalysis
   
+  // Legacy ID support
+  caseId      String?  @unique
+
   // Additional incident details
   category    String?  // Theft, Assault, Cyber, etc.
   priority    String?  // High, Medium, Low

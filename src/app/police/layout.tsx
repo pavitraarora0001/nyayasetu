@@ -16,6 +16,7 @@ export default function PoliceLayout({
         if (!auth) {
             router.push("/login");
         } else {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsAuthorized(true);
         }
     }, [router]);

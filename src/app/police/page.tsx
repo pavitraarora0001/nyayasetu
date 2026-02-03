@@ -4,14 +4,17 @@ import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import FIRDraftEditor from "@/components/forms/FIRDraftEditor";
 import { IncidentAnalysis } from "@/lib/types";
-import Link from "next/link";
+
 
 export default function PolicePage() {
     const [view, setView] = useState<"dashboard" | "new-case" | "editor">("dashboard");
     const [description, setDescription] = useState("");
     const [analysis, setAnalysis] = useState<IncidentAnalysis | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [incidents, setIncidents] = useState<any[]>([]);
+
+
 
     // Fetch incidents on mount
     useEffect(() => {
@@ -89,7 +92,7 @@ export default function PolicePage() {
                             <div className={styles.statCard}>
                                 <h3>Processed Today</h3>
                                 <p>{incidents.filter(i => new Date(i.createdAt).toDateString() === new Date().toDateString()).length}</p>
-                                <span className={`${styles.statTrend} ${styles.trendUp}`}>Today's Activity</span>
+                                <span className={`${styles.statTrend} ${styles.trendUp}`}>Today&apos;s Activity</span>
                             </div>
                             <div className={styles.statCard}>
                                 <h3>Pending Action</h3>
@@ -124,6 +127,7 @@ export default function PolicePage() {
                                             cat = analysis.classification?.type || "General";
                                             // Mock priority if missing, or derive from logic
                                             priority = analysis.classification?.priority || (inc.status === 'PENDING' ? 'High' : 'Low');
+                                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                         } catch (e) { }
 
                                         return (

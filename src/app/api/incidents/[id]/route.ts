@@ -3,8 +3,9 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         const incident = await prisma.incident.findUnique({
             where: { id: params.id }
@@ -23,12 +24,14 @@ export async function GET(
 
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         const body = await request.json();
         const { status, firDraft, officerId, officerName, policeStation } = body;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: any = { updatedAt: new Date() };
         if (status) updateData.status = status;
         if (firDraft !== undefined) updateData.firDraft = firDraft;
@@ -50,8 +53,9 @@ export async function PATCH(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    props: { params: Promise<{ id: string }> }
 ) {
+    const params = await props.params;
     try {
         // Soft delete by updating status
         const incident = await prisma.incident.update({

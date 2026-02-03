@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚖️ NyayaSetu - Bridge to Justice
 
-## Getting Started
+**NyayaSetu** is an AI-Powered Legal Incident Analysis System built to assist Indian Citizens and Police Officials. It interprets incident descriptions and maps them to the correct sections of the **Bharatiya Nyaya Sanhita (BNS)** and **Indian Penal Code (IPC)**.
 
-First, run the development server:
+![Status](https://img.shields.io/badge/Status-Production%20Ready-blue)
+![Tech](https://img.shields.io/badge/Tech-Next.js%2015%20%7C%20TypeScript%20%7C%20CSS%20Modules-black)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🌟 Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 👥 Public Portal
+- **Incident Narration**: Simple text interface for citizens to report crimes/incidents.
+- **AI Analysis**: Instantly provides:
+  - Applicable Legal Sections (BNS & IPC).
+  - Cognizable / Non-Cognizable Classification.
+  - Required procedural steps (FIR, Medical Exam, etc.).
+- **Multilingual UI**: Toggle between English and Hindi.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 👮 Police Panel
+- **Dashboard**: Overview of pending and processed cases.
+- **FIR Drafting Assistant**:
+  - Auto-generated FIR drafts based on incident facts.
+  - **Editable Sections**: Officers can add/remove sections to ensure accuracy.
+  - **PDF Export**: Download professional FIR drafts for official use.
+- **Evidence Checklist**: AI flags missing critical information (Time, Weapon, etc.).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+### Prerequisites
+- Node.js 18+ installed.
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/nyayasetu.git
+   cd nyayasetu
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) (or port 3001) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### AI Engine
+By default, the application runs on a **High-Fidelity Mock Engine** in `src/app/api/analyze/route.ts` to demonstrate capabilities without costs.
+
+To enable **Real AI (LLM)**:
+1. Rename `.env.example` to `.env.local`.
+2. Add your API Key (e.g., `OPENAI_API_KEY`).
+3. Uncomment the fetch logic in `src/app/api/analyze/route.ts`.
+
+## 📦 Deployment
+
+### Vercel (Recommended)
+This Next.js app is optimized for Vercel.
+1. Push your code to GitHub.
+2. Import the project on [Vercel](https://vercel.com).
+3. It will auto-detect the build settings.
+4. Click **Deploy**.
+
+## 🛡️ Legal Disclaimer
+*NyayaSetu is an assistive tool. It provides information based on the BNS/IPC but does not replace professional legal counsel or the final authority of the Police and Courts.*

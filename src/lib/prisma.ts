@@ -1,9 +1,31 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined
+    prisma: PrismaClient | undefined;
+};
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+    globalForPrisma.prisma = prisma;
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+// Helper function to safely connect
+export async function connectDB() {
+    try {
+        await prisma.$connect();
+        console.log('✅ Database connected successfully');
+        return true;
+    } catch (error) {
+        console.error('❌ Database connection failed:', error);
+        return false;
+    }
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Helper function to safely disconnect
+export async function disconnectDB() {
+    await prisma.$disconnect();
+}
+

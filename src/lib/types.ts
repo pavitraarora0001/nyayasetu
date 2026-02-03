@@ -21,6 +21,7 @@ export interface IncidentAnalysis {
         cognizable: boolean;
         fir_required: boolean;
         arrest_without_warrant: boolean;
+        priority?: string; // High, Medium, Low
     };
     sections: LegalSection[];
     guidance: {
@@ -32,3 +33,26 @@ export interface IncidentAnalysis {
     visual_analysis?: string; // Optional field for image insights
     confidence_score: 'High' | 'Medium' | 'Low';
 }
+
+export interface Officer {
+    id: string;
+    name: string;
+    badgeNumber: string;
+    policeStation: string;
+}
+
+export interface CaseFilter {
+    status?: string;
+    category?: string;
+    priority?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    search?: string;
+}
+
+export interface FIRDraft {
+    incidentId: string;
+    content: string;
+    lastSaved: string;
+}
+

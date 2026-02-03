@@ -3,6 +3,7 @@
 import { useState } from "react";
 import IncidentForm from "@/components/forms/IncidentForm";
 import AnalysisResult from "@/components/display/AnalysisResult";
+import SuccessModal from "@/components/ui/SuccessModal";
 import { IncidentAnalysis } from "@/lib/types";
 import styles from "./page.module.css";
 import Link from "next/link";
@@ -14,6 +15,8 @@ export default function PublicPage() {
     const [trackId, setTrackId] = useState("");
     const [statusResult, setStatusResult] = useState<any>(null);
     const [isTracking, setIsTracking] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [submittedCaseId, setSubmittedCaseId] = useState("");
 
     const handleAnalyze = async (description: string, image?: string) => {
         setIsLoading(true);
@@ -30,9 +33,15 @@ export default function PublicPage() {
 
             const data = await res.json();
             setAnalysis(data);
+
+            // Show success modal with case ID
+            if (data.id) {
+                setSubmittedCaseId(data.id);
+                setShowSuccessModal(true);
+            }
         } catch (error) {
             console.error("Analysis failed", error);
-            alert("Something went wrong. Please try again.");
+            alert(lang === "hi" ? "कुछ गलत हो गया। कृपया पुन: प्रयास करें।" : "Something went wrong. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -43,16 +52,19 @@ export default function PublicPage() {
         setIsTracking(true);
         setStatusResult(null);
         try {
-            const res = await fetch("/api/incidents");
+            // Use the individual incident API endpoint
+            const res = await fetch(`/api/incidents/${trackId.trim()}`);
             if (res.ok) {
                 const data = await res.json();
-                // Client-side filtering for demo since API returns all
-                // In real app, we'd have /api/incidents/[id]
-                const found = data.find((i: any) => i.id === trackId.trim());
-                setStatusResult(found || "NOT_FOUND");
+                setStatusResult(data);
+            } else if (res.status === 404) {
+                setStatusResult("NOT_FOUND");
+            } else {
+                throw new Error("Tracking failed");
             }
         } catch (e) {
-            alert("Tracking failed");
+            console.error(e);
+            alert(lang === "hi" ? "ट्रैकिंग विफल रही" : "Tracking failed");
         } finally {
             setIsTracking(false);
         }
@@ -121,12 +133,21 @@ export default function PublicPage() {
                         <AnalysisResult analysis={analysis} lang={lang} />
                         <div className={styles.resetContainer}>
                             <button onClick={() => setAnalysis(null)} className={styles.resetBtn}>
-                                Report Another Incident
+                                {lang === "hi" ? "एक और घटना रिपोर्ट करें" : "Report Another Incident"}
                             </button>
                         </div>
                     </div>
                 )}
             </main>
+
+            {/* Success Modal */}
+            {showSuccessModal && (
+                <SuccessModal
+                    caseId={submittedCaseId}
+                    onClose={() => setShowSuccessModal(false)}
+                    lang={lang}
+                />
+            )}
         </div>
     );
 }

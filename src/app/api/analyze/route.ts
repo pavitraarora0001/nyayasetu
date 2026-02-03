@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { IncidentAnalysis } from '@/lib/types';
 import { analyzeWithGemini } from '@/lib/ai';
-// import { prisma } from '@/lib/prisma';
-import { saveIncident } from '@/lib/json-db';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { description, userType, image } = body; // Accept image
+        const { description, userType, image, location } = body;
 
         if (!description) {
             return NextResponse.json(
@@ -19,13 +18,6 @@ export async function POST(request: Request) {
         // SIMULATION DELAY (To mimic AI processing)
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        // TODO: INTEGRATE REAL LLM HERE
-        // Example:
-        // const response = await fetch('https://api.openai.com/v1/chat/completions', { ... });
-        // const data = await response.json();
-
-        // MOCK RESPONSE (Based on "Phone Theft" scenario)
-        // Dynamic mock based on input keywords for better demo experience
         // MOCK RESPONSE (Fallback & Simulation)
         let mockAnalysis: IncidentAnalysis | null = null;
 
@@ -51,7 +43,8 @@ export async function POST(request: Request) {
                         type: "Theft / Snatching",
                         cognizable: true,
                         fir_required: true,
-                        arrest_without_warrant: true
+                        arrest_without_warrant: true,
+                        priority: "High"
                     },
                     sections: [
                         {
@@ -81,9 +74,10 @@ export async function POST(request: Request) {
                     summary: "The victim was physically assaulted. The extent of injury needs to be determined (simple vs grievous).",
                     classification: {
                         type: "Voluntarily Causing Hurt",
-                        cognizable: false, // Simple hurt 323 is non-cognizable usually, but let's be safe
-                        fir_required: false, // NCR might be filed
-                        arrest_without_warrant: false
+                        cognizable: false,
+                        fir_required: false,
+                        arrest_without_warrant: false,
+                        priority: "Medium"
                     },
                     sections: [
                         {
@@ -115,7 +109,8 @@ export async function POST(request: Request) {
                         type: "General / Unclassified",
                         cognizable: false,
                         fir_required: false,
-                        arrest_without_warrant: false
+                        arrest_without_warrant: false,
+                        priority: "Low"
                     },
                     sections: [],
                     guidance: {
@@ -129,26 +124,31 @@ export async function POST(request: Request) {
             }
         }
 
-        // [NEW] Persist to Database (Fail-safe for Demo)
-        let savedId = "demo-id-" + Date.now();
+        // Persist to Database using Prisma
+        let savedIncident;
 
         try {
-            // [MODIFIED] Use JSON DB
-            const newIncident = {
-                id: savedId,
-                description,
-                status: userType === 'police' ? 'DRAFTING' : 'PENDING',
-                analysis: JSON.stringify(mockAnalysis),
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            saveIncident(newIncident);
+            savedIncident = await prisma.incident.create({
+                data: {
+                    description,
+                    status: userType === 'police' ? 'DRAFTING' : 'PENDING',
+                    analysis: JSON.stringify(mockAnalysis),
+                    category: mockAnalysis.classification.type,
+                    priority: mockAnalysis.classification.priority || 'Medium',
+                    location: location || null,
+                    imageUrl: image || null,
+                    timestamp: new Date(),
+                }
+            });
+            console.log('✅ Incident saved to database:', savedIncident.id);
         } catch (dbError) {
-            console.warn("⚠️ Database write failed", dbError);
+            console.warn("⚠️ Database write failed, using fallback ID", dbError);
+            // Fallback to demo ID if database fails
+            savedIncident = { id: "demo-id-" + Date.now() };
         }
 
-        // Return the analysis + the DB ID (or fake ID)
-        return NextResponse.json({ ...mockAnalysis, id: savedId });
+        // Return the analysis + the DB ID
+        return NextResponse.json({ ...mockAnalysis, id: savedIncident.id });
 
     } catch (error) {
         console.error('Analysis failed:', error);
@@ -158,3 +158,4 @@ export async function POST(request: Request) {
         );
     }
 }
+

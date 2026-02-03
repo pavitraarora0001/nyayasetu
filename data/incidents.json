@@ -1,0 +1,24 @@
+[
+  {
+    "id": "demo-id-1770108961258",
+    "description": "attemp to theft ",
+    "status": "PENDING",
+    "analysis": "{\"summary\":\"The user reports an incident of phone snatching in a public area. The perpetrator used force to take the property and fled the scene. This aligns with theft/snatching.\",\"classification\":{\"type\":\"Theft / Snatching\",\"cognizable\":true,\"fir_required\":true,\"arrest_without_warrant\":true},\"sections\":[{\"section\":\"303(2)\",\"law\":\"BNS\",\"title\":\"Theft (Snatching)\",\"punishment\":\"Up to 3 years / Fine\"},{\"section\":\"379\",\"law\":\"IPC\",\"title\":\"Theft\",\"punishment\":\"Up to 3 years\"}],\"guidance\":{\"immediate_action\":\"Visit the nearest police station immediately or file an e-FIR if available.\",\"evidence_handling\":\"Do not wipe the phone remotely yet if tracking is possible. Keep IMEI number ready.\",\"legal_steps\":\"Police is bound to register an FIR for cognizable offences like theft.\"},\"missing_facts\":[\"Exact time of incident\",\"Description of the accused\"],\"confidence_score\":\"High\"}",
+    "createdAt": "2026-02-03T08:56:01.258Z",
+    "updatedAt": "2026-02-03T08:56:01.258Z"
+  },
+  {
+    "id": "CASE-2024-001",
+    "description": "Phone snatching at CP Outer Circle",
+    "status": "PENDING",
+    "analysis": "{\"classification\":{\"type\":\"Theft\",\"priority\":\"High\"}}",
+    "createdAt": "2024-02-03T00:00:00.000Z"
+  },
+  {
+    "id": "CASE-2024-002",
+    "description": "Online payment fraud reporting",
+    "status": "DRAFTING",
+    "analysis": "{\"classification\":{\"type\":\"Cyber\",\"priority\":\"Medium\"}}",
+    "createdAt": "2024-02-02T00:00:00.000Z"
+  }
+]

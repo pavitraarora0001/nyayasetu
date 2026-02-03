@@ -10,8 +10,29 @@ datasource db {
 model Incident {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   description String
-  status      String   @default("PENDING") // PENDING, PROCESSED, FILED
+  status      String   @default("PENDING") // PENDING, DRAFTING, PROCESSED, FILED
   analysis    String   // Store JSON string of IncidentAnalysis
+  
+  // Additional incident details
+  category    String?  // Theft, Assault, Cyber, etc.
+  priority    String?  // High, Medium, Low
+  location    String?  // Location of incident
+  timestamp   DateTime? // When incident occurred
+  imageUrl    String?  // Base64 or URL of evidence image
+  
+  // Officer assignment
+  officerId   String?
+  officerName String?
+  policeStation String?
+  
+  // FIR Draft
+  firDraft    String?  // Generated FIR content
+  
+  // Metadata
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  @@index([status])
+  @@index([createdAt])
+  @@index([category])
 }

@@ -1,0 +1,67 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+
+export async function GET(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const incident = await prisma.incident.findUnique({
+            where: { id: params.id }
+        });
+
+        if (!incident) {
+            return NextResponse.json({ error: 'Incident not found' }, { status: 404 });
+        }
+
+        return NextResponse.json(incident);
+    } catch (error) {
+        console.error('Failed to fetch incident:', error);
+        return NextResponse.json({ error: 'Failed to fetch incident' }, { status: 500 });
+    }
+}
+
+export async function PATCH(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const body = await request.json();
+        const { status, firDraft, officerId, officerName, policeStation } = body;
+
+        const updateData: any = { updatedAt: new Date() };
+        if (status) updateData.status = status;
+        if (firDraft !== undefined) updateData.firDraft = firDraft;
+        if (officerId) updateData.officerId = officerId;
+        if (officerName) updateData.officerName = officerName;
+        if (policeStation) updateData.policeStation = policeStation;
+
+        const incident = await prisma.incident.update({
+            where: { id: params.id },
+            data: updateData
+        });
+
+        return NextResponse.json(incident);
+    } catch (error) {
+        console.error('Failed to update incident:', error);
+        return NextResponse.json({ error: 'Failed to update incident' }, { status: 500 });
+    }
+}
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
+    try {
+        // Soft delete by updating status
+        const incident = await prisma.incident.update({
+            where: { id: params.id },
+            data: { status: 'DELETED', updatedAt: new Date() }
+        });
+
+        return NextResponse.json({ success: true, incident });
+    } catch (error) {
+        console.error('Failed to delete incident:', error);
+        return NextResponse.json({ error: 'Failed to delete incident' }, { status: 500 });
+    }
+}

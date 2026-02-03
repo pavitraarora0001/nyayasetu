@@ -7,12 +7,33 @@ import { IncidentAnalysis } from "@/lib/types";
 
 
 export default function PolicePage() {
-    const [view, setView] = useState<"dashboard" | "new-case" | "editor">("dashboard");
+    const [view, setView] = useState<"dashboard" | "new-case" | "editor" | "case-detail">("dashboard");
     const [description, setDescription] = useState("");
     const [analysis, setAnalysis] = useState<IncidentAnalysis | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [incidents, setIncidents] = useState<any[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [selectedIncident, setSelectedIncident] = useState<any>(null);
+
+    const handleView = (incident: any) => {
+        setSelectedIncident(incident);
+        setView("case-detail");
+    };
+
+    const updateStatus = async (id: string, newStatus: string) => {
+        try {
+            await fetch(`/api/incidents/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            fetchIncidents(); // Refresh
+            if (view === 'case-detail') setView('dashboard');
+        } catch (e) {
+            console.error("Failed to update status");
+        }
+    };
 
 
 
@@ -144,7 +165,7 @@ export default function PolicePage() {
                                                         {inc.status}
                                                     </span>
                                                 </td>
-                                                <td><button className={styles.viewBtn}>View</button></td>
+                                                <td><button className={styles.viewBtn} onClick={() => handleView(inc)}>View</button></td>
                                             </tr>
                                         );
                                     }) : (
@@ -188,6 +209,67 @@ export default function PolicePage() {
                             <span>Drafting Mode</span>
                         </div>
                         <FIRDraftEditor initialAnalysis={analysis} />
+                    </div>
+                )}
+
+                {view === "case-detail" && selectedIncident && (
+                    <div className={styles.detailView}>
+                        <div className={styles.breadcrumb}>
+                            <button onClick={() => setView("dashboard")}>← Back to Dashboard</button>
+                            <span>Case Details / {selectedIncident.caseId || selectedIncident.id}</span>
+                        </div>
+
+                        <div className={styles.detailHeader}>
+                            <div>
+                                <h2>Case Report</h2>
+                                <span className={`${styles.tag} ${styles[`status${selectedIncident.status.charAt(0) + selectedIncident.status.slice(1).toLowerCase()}`]}`}>
+                                    {selectedIncident.status}
+                                </span>
+                            </div>
+                            <div className={styles.detailActions}>
+                                {selectedIncident.status === 'PENDING' && (
+                                    <>
+                                        <button className={styles.btnAccept} onClick={() => updateStatus(selectedIncident.id, 'ACCEPTED')}>✓ Accept & Investigate</button>
+                                        <button className={styles.btnReject} onClick={() => updateStatus(selectedIncident.id, 'REJECTED')}>✕ Reject</button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className={styles.detailSection}>
+                            <h3>Incident Description</h3>
+                            <div className={styles.detailContent}>
+                                {selectedIncident.description}
+                            </div>
+                        </div>
+
+                        <div className={styles.detailSection}>
+                            <h3>AI Analysis Data</h3>
+                            {(() => {
+                                try {
+                                    const analysisData = JSON.parse(selectedIncident.analysis || '{}');
+                                    return (
+                                        <div className={styles.detailContent}>
+                                            <p><strong>Classification:</strong> {analysisData.classification?.type}</p>
+                                            <p><strong>Priority:</strong> <span className={styles[`priority${analysisData.classification?.priority}`]}>{analysisData.classification?.priority}</span></p>
+                                            <p><strong>Summary:</strong> {analysisData.summary}</p>
+                                        </div>
+                                    );
+                                } catch (e) { return <p>No analysis data.</p>; }
+                            })()}
+                        </div>
+
+                        <div className={styles.detailSection}>
+                            <h3>Evidence</h3>
+                            <div className={styles.detailContent}>
+                                {selectedIncident.imageUrl ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={selectedIncident.imageUrl} alt="Evidence" style={{ maxWidth: '100%', borderRadius: '0.5rem' }} />
+                                ) : (
+                                    <p>No media attached.</p>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 )}
             </main>

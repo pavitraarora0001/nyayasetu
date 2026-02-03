@@ -131,7 +131,7 @@ export default function PublicPage() {
                     <IncidentForm onAnalyze={handleAnalyze} isLoading={isLoading} lang={lang} />
                 ) : (
                     <div className={styles.resultContainer}>
-                        <AnalysisResult analysis={analysis} lang={lang} />
+                        <AnalysisResult analysis={analysis} lang={lang} caseId={submittedCaseId || (analysis as any).id} />
                         <div className={styles.resetContainer}>
                             <button onClick={() => setAnalysis(null)} className={styles.resetBtn}>
                                 {lang === "hi" ? "एक और घटना रिपोर्ट करें" : "Report Another Incident"}

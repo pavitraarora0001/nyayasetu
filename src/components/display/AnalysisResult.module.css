@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background: white;
+    background: var(--color-surface);
     padding: 2rem;
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -38,7 +38,28 @@
 
 .text {
     line-height: 1.6;
-    color: var(--color-text-main);
+    color: #1f2937 !important;
+    /* Force dark gray */
+}
+
+.registeredBanner {
+    background: #ecfdf5;
+    border: 2px solid #059669;
+    color: #064e3b;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.registeredBanner h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #059669;
+}
+
+.registeredBanner p {
+    font-size: 1.25rem;
 }
 
 .visualAnalysis {
@@ -93,11 +114,13 @@
 .cardDanger {
     border-left: 4px solid var(--color-error);
     background: #FEF2F2;
+    color: black;
 }
 
 .cardSafe {
     border-left: 4px solid var(--color-success);
     background: #ECFDF5;
+    color: black;
 }
 
 .cardNeutral {

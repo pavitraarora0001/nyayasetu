@@ -1,21 +1,30 @@
 :root {
   /* Government-Grade Palette */
-  --color-primary: #002147; /* Navy Blue - Authority */
+  --color-primary: #002147;
+  /* Navy Blue - Authority */
   --color-primary-light: #003366;
-  --color-secondary: #FFCC00; /* Gold - Justice */
-  --color-accent: #FF9933; /* Saffron - Warmth/Urgency */
-  --color-success: #138808; /* Green - Safe/Go */
-  --color-error: #D32F2F; /* Red - Danger/Stop */
-  
+  --color-secondary: #FFCC00;
+  /* Gold - Justice */
+  --color-accent: #FF9933;
+  /* Saffron - Warmth/Urgency */
+  --color-success: #138808;
+  /* Green - Safe/Go */
+  --color-error: #D32F2F;
+  /* Red - Danger/Stop */
+
   /* Neutrals */
-  --color-background: #F3F4F6; /* Light Gray */
-  --color-surface: #FFFFFF; /* White */
-  --color-text-main: #111827; /* Near Black */
-  --color-text-muted: #6B7280; /* Gray */
+  --color-background: #F3F4F6;
+  /* Light Gray */
+  --color-surface: #FFFFFF;
+  /* White */
+  --color-text-main: #111827;
+  /* Near Black */
+  --color-text-muted: #6B7280;
+  /* Gray */
   --color-border: #E5E7EB;
 
   --font-body: var(--font-geist-sans), system-ui, sans-serif;
-  --font-heading: var(--font-geist-mono), monospace; 
+  --font-heading: var(--font-geist-mono), monospace;
   /* Using Mono for headings gives a technical/legal feel, or stick to Sans. 
      PROMPT says "No legal jargon", "Simple". Maybe Sans is better for both.
      Let's keep Sans for both for Public, Mono for specifics. */
@@ -28,7 +37,8 @@
     --color-text-main: #f3f4f6;
     --color-text-muted: #9ca3af;
     --color-border: #374151;
-    --color-primary: #1e3a8a; /* Lighter Navy for Dark Mode */
+    --color-primary: #60a5fa;
+    /* Lighter Blue for Dark Mode Visibility */
   }
 }
 
@@ -51,8 +61,14 @@ a {
   text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-body); /* Keeping it clean */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-body);
+  /* Keeping it clean */
   font-weight: 700;
   line-height: 1.2;
 }
@@ -80,6 +96,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-primary);
   color: white;
 }
+
 .btn-primary:hover {
   background-color: var(--color-primary-light);
 }
@@ -89,5 +106,5 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

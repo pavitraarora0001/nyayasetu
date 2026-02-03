@@ -6,9 +6,10 @@ import styles from "./AnalysisResult.module.css";
 interface AnalysisResultProps {
     analysis: IncidentAnalysis;
     lang?: "en" | "hi";
+    caseId?: string;
 }
 
-export default function AnalysisResult({ analysis, lang = "en" }: AnalysisResultProps) {
+export default function AnalysisResult({ analysis, lang = "en", caseId }: AnalysisResultProps) {
     const { classification, sections, guidance, summary, missing_facts } = analysis;
 
     const t = {
@@ -16,15 +17,21 @@ export default function AnalysisResult({ analysis, lang = "en" }: AnalysisResult
         legal_map: lang === "hi" ? "कानूनी धाराएं (BNS / IPC)" : "Legal Sections Mapping",
         missing: lang === "hi" ? "⚠️ इन विवरणों की आवश्यकता है" : "⚠️ Missing Information",
         actions: lang === "hi" ? "सुझाव और कार्यवाही" : "Recommended Actions",
-        visual: lang === "hi" ? "📸 दृश्य साक्ष्य विश्लेषण" : "📸 Visual Evidence Analysis"
-    };
-
-    const getConfidenceColor = (score: string) => {
-        // This function body was not provided in the instruction, leaving it as an empty function for now.
+        visual: lang === "hi" ? "📸 दृश्य साक्ष्य विश्लेषण" : "📸 Visual Evidence Analysis",
+        registered: lang === "hi" ? "✔️ घटना दर्ज की गई" : "✔️ Incident Registered"
     };
 
     return (
         <div className={styles.container}>
+            {/* Registered Banner */}
+            {caseId && (
+                <div className={styles.registeredBanner}>
+                    <h3>{t.registered}</h3>
+                    <p>Case ID: <strong>{caseId}</strong></p>
+                    <small>Save this ID to track status later.</small>
+                </div>
+            )}
+
             {/* Summary Section */}
             <section className={styles.section}>
                 <h3 className={styles.heading}>📝 Incident Summary</h3>

@@ -131,11 +131,19 @@
     color: #DC2626;
 }
 
-.recentActivity {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-border);
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+}
+
+.sectionHeader h3 {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
 .table {
@@ -285,4 +293,72 @@
     gap: 1rem;
     align-items: center;
     color: var(--color-text-muted);
+}
+
+.detailView {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+}
+
+.detailHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+}
+
+.detailActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btnAccept {
+    background: var(--color-success);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnReject {
+    background: var(--color-error);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.detailSection {
+    margin-bottom: 2rem;
+}
+
+.detailSection h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.detailContent {
+    background: var(--color-background);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    line-height: 1.6;
+}
+
+.jsonBox {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    overflow-x: auto;
+    font-size: 0.85rem;
 }

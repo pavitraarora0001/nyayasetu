@@ -15,8 +15,7 @@ export async function POST(request: Request) {
             );
         }
 
-        // SIMULATION DELAY (To mimic AI processing)
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // SIMULATION DELAY REMOVED FOR LIVE PROD
 
         // MOCK RESPONSE (Fallback & Simulation)
         let mockAnalysis: IncidentAnalysis | null = null;

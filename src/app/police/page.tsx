@@ -7,7 +7,7 @@ import { IncidentAnalysis } from "@/lib/types";
 
 
 export default function PolicePage() {
-    const [view, setView] = useState<"dashboard" | "new-case" | "editor" | "case-detail">("dashboard");
+    const [view, setView] = useState<"dashboard" | "new-case" | "editor" | "case-detail" | "case-history" | "settings">("dashboard");
     const [description, setDescription] = useState("");
     const [analysis, setAnalysis] = useState<IncidentAnalysis | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -84,8 +84,8 @@ export default function PolicePage() {
                 <nav className={styles.nav}>
                     <button onClick={() => setView("dashboard")} className={view === "dashboard" ? styles.active : ""}>📊 Dashboard</button>
                     <button onClick={() => setView("new-case")} className={view === "new-case" ? styles.active : ""}>➕ New Case Report</button>
-                    <button>📂 Case History</button>
-                    <button>⚙️ Settings</button>
+                    <button onClick={() => setView("case-history")} className={view === "case-history" ? styles.active : ""}>📂 Case History</button>
+                    <button onClick={() => setView("settings")} className={view === "settings" ? styles.active : ""}>⚙️ Settings</button>
                 </nav>
                 <div className={styles.user}>
                     <div className={styles.avatar}>👮</div>
@@ -270,6 +270,103 @@ export default function PolicePage() {
                                 )}
                             </div>
                         </div>
+                    </div>
+                )}
+
+                {view === "case-history" && (
+                    <div className={styles.historyView}>
+                        <div className={styles.historyHeader}>
+                            <h1>Case History</h1>
+                            <input type="text" placeholder="Search cases..." className={styles.searchBox} />
+                        </div>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Priority</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {incidents.map((inc, i) => {
+                                    let cat = "Unclassified";
+                                    let priority = "Low";
+                                    try {
+                                        const analysis = JSON.parse(inc.analysis || '{}');
+                                        cat = analysis.classification?.type || "General";
+                                        priority = analysis.classification?.priority || (inc.status === 'PENDING' ? 'High' : 'Low');
+                                    } catch (e) { }
+
+                                    return (
+                                        <tr key={i}>
+                                            <td style={{ fontWeight: 600 }}>{inc.id.split('-').slice(-2).join('-')}</td>
+                                            <td>{cat}</td>
+                                            <td title={inc.description}>
+                                                {inc.description.length > 50 ? inc.description.substring(0, 50) + '...' : inc.description}
+                                            </td>
+                                            <td><span className={styles[`priority${priority}`]}>{priority}</span></td>
+                                            <td>{new Date(inc.createdAt).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={`${styles.tag} ${styles[`status${inc.status.charAt(0) + inc.status.slice(1).toLowerCase()}`]}`}>
+                                                    {inc.status}
+                                                </span>
+                                            </td>
+                                            <td><button className={styles.viewBtn} onClick={() => handleView(inc)}>View</button></td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {view === "settings" && (
+                    <div className={styles.settingsView}>
+                        <h1>Settings</h1>
+                        <div className={styles.settingsCard}>
+                            <h3>Profile Settings</h3>
+                            <div className={styles.formGroup}>
+                                <label>Officer Name</label>
+                                <input type="text" defaultValue="Officer Sharma" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>Badge Number</label>
+                                <input type="text" defaultValue="DL-8821" readOnly />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>Police Station</label>
+                                <select defaultValue="cp">
+                                    <option value="cp">Connaught Place</option>
+                                    <option value="hk">Hauz Khas</option>
+                                    <option value="k">Karol Bagh</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className={styles.settingsCard}>
+                            <h3>Preferences</h3>
+                            <div className={styles.toggle}>
+                                <span>Email Notifications for New Cases</span>
+                                <input type="checkbox" defaultChecked />
+                            </div>
+                            <div className={styles.toggle}>
+                                <span>Dark Mode</span>
+                                <input type="checkbox" />
+                            </div>
+                            <div className={styles.toggle}>
+                                <span>AI Analysis Sensitivity</span>
+                                <select style={{ padding: '0.25rem', width: 'auto' }}>
+                                    <option>Standard</option>
+                                    <option>High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button className={styles.saveBtn} onClick={() => alert('Settings Saved!')}>Save Changes</button>
                     </div>
                 )}
             </main>

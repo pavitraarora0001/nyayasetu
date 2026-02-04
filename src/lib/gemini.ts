@@ -50,9 +50,13 @@ export async function analyzeIncident(description: string, imageBase64?: string)
     const parts: any[] = [{ text: prompt }];
 
     if (imageBase64) {
-      // In a real implementation we would use inlineData with mimeType 'image/png' or 'image/jpeg'
-      // For this simulation we append context
-      parts.push({ text: `\n[Image Context Provided]: ${imageBase64.substring(0, 50)}... (Image analysis is secondary)` });
+      // Real Multimodal Input
+      parts.push({
+        inlineData: {
+          data: imageBase64.split(',')[1] || imageBase64, // Remove header if present
+          mimeType: "image/jpeg", // Defaulting to jpeg, ideally detect from base64 header
+        },
+      });
     }
 
     const result = await model.generateContent(parts);

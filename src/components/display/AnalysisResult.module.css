@@ -196,3 +196,90 @@
     margin-top: 1rem;
     font-style: italic;
 }
+
+/* Procedure Timeline Styles */
+.procedureContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: space-between;
+}
+
+.step {
+    flex: 1;
+    min-width: 120px;
+    background: var(--color-background);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+    position: relative;
+    text-align: center;
+}
+
+.step::after {
+    content: '→';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    font-weight: bold;
+}
+
+.step:last-child::after {
+    display: none;
+}
+
+.stepNumber {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    line-height: 2rem;
+    margin: 0 auto 0.5rem;
+    font-weight: bold;
+}
+
+.stepTitle {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.stepDesc {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.actionsSection {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.registerBtn {
+    background: var(--color-primary);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.registerBtn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.registerBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}

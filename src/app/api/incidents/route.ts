@@ -40,27 +40,35 @@ import { analyzeIncident } from '@/lib/gemini';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { description, type, imageUrl } = body;
+        const { description, type, imageUrl, analysis: providedAnalysis } = body;
 
         // Generate readable Case ID
         const timestamp = Date.now();
         const caseId = `CASE-${new Date().getFullYear()}-${timestamp.toString().slice(-4)}`;
 
-        // Analyze with Gemini
-        let analysisData = {};
+        // Use provided analysis or Analyze with Gemini
+        let analysisData = providedAnalysis || {};
         let priority = 'Medium';
         let category = type || 'Unclassified';
 
-        try {
-            const analysis = await analyzeIncident(description);
-            analysisData = analysis;
-            if (analysis.classification) {
-                if (analysis.classification.priority) priority = analysis.classification.priority;
-                if (analysis.classification.type) category = analysis.classification.type;
+        if (!providedAnalysis) {
+            try {
+                const analysis = await analyzeIncident(description);
+                analysisData = analysis;
+                if (analysis.classification) {
+                    if (analysis.classification.priority) priority = analysis.classification.priority;
+                    if (analysis.classification.type) category = analysis.classification.type;
+                }
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                // Continue without analysis, it can be retried later
             }
-        } catch (error) {
-            console.error('Analysis failed:', error);
-            // Continue without analysis, it can be retried later
+        } else {
+            // Extract metadata from provided analysis
+            if (providedAnalysis.classification) {
+                if (providedAnalysis.classification.priority) priority = providedAnalysis.classification.priority;
+                if (providedAnalysis.classification.type) category = providedAnalysis.classification.type;
+            }
         }
 
         const incident = await prisma.incident.create({

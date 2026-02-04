@@ -7,9 +7,10 @@ interface AnalysisResultProps {
     analysis: IncidentAnalysis;
     lang?: "en" | "hi";
     caseId?: string;
+    onRegister?: () => void;
 }
 
-export default function AnalysisResult({ analysis, lang = "en", caseId }: AnalysisResultProps) {
+export default function AnalysisResult({ analysis, lang = "en", caseId, onRegister }: AnalysisResultProps) {
     const { classification, sections, guidance, summary, missing_facts } = analysis;
 
     const t = {
@@ -20,6 +21,23 @@ export default function AnalysisResult({ analysis, lang = "en", caseId }: Analys
         visual: lang === "hi" ? "📸 दृश्य साक्ष्य विश्लेषण" : "📸 Visual Evidence Analysis",
         registered: lang === "hi" ? "✔️ घटना दर्ज की गई" : "✔️ Incident Registered"
     };
+
+    // Procedure Steps
+    const procedures = classification.cognizable
+        ? [
+            { title: "Report", desc: "Information to Police / FIR" },
+            { title: "Investigation", desc: "Evidence Collection & Arrest" },
+            { title: "Charge Sheet", desc: "Filing in Court" },
+            { title: "Trial", desc: "Judicial Proceedings" },
+            { title: "Judgment", desc: "Verdict & Sentence" }
+        ]
+        : [
+            { title: "Complaint", desc: "Report to Magistrate/Police" },
+            { title: "Inquiry", desc: "Preliminary Check" },
+            { title: "Direction", desc: "Court orders investigation" },
+            { title: "Trial", desc: "Summons & Evidence" },
+            { title: "Judgment", desc: "Verdict" }
+        ];
 
     return (
         <div className={styles.container}>
@@ -36,6 +54,20 @@ export default function AnalysisResult({ analysis, lang = "en", caseId }: Analys
             <section className={styles.section}>
                 <h3 className={styles.heading}>📝 Incident Summary</h3>
                 <p className={styles.text}>{summary}</p>
+            </section>
+
+            {/* Full Procedure Section */}
+            <section className={styles.section}>
+                <h3 className={styles.heading}>🚦 Standard Legal Procedure</h3>
+                <div className={styles.procedureContainer}>
+                    {procedures.map((step, idx) => (
+                        <div key={idx} className={styles.step}>
+                            <span className={styles.stepNumber}>{idx + 1}</span>
+                            <div className={styles.stepTitle}>{step.title}</div>
+                            <div className={styles.stepDesc}>{step.desc}</div>
+                        </div>
+                    ))}
+                </div>
             </section>
 
             {/* Classification Cards */}
@@ -120,6 +152,15 @@ export default function AnalysisResult({ analysis, lang = "en", caseId }: Analys
                     </div>
                 )
             }
+
+            {/* Register Action */}
+            {!caseId && onRegister && (
+                <div className={styles.actionsSection}>
+                    <button className={styles.registerBtn} onClick={onRegister}>
+                        ✅ Proceed & Register Official Case
+                    </button>
+                </div>
+            )}
 
             {/* Disclaimer */}
             <p className={styles.disclaimer}>

@@ -9,6 +9,7 @@ import { IncidentAnalysis } from "@/lib/types";
 export default function PolicePage() {
     const [view, setView] = useState<"dashboard" | "new-case" | "editor" | "case-detail" | "case-history" | "settings">("dashboard");
     const [description, setDescription] = useState("");
+    const [image, setImage] = useState<string | null>(null);
     const [analysis, setAnalysis] = useState<IncidentAnalysis | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,6 +17,7 @@ export default function PolicePage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [selectedIncident, setSelectedIncident] = useState<any>(null);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleView = (incident: any) => {
         setSelectedIncident(incident);
         setView("case-detail");
@@ -30,7 +32,7 @@ export default function PolicePage() {
             });
             fetchIncidents(); // Refresh
             if (view === 'case-detail') setView('dashboard');
-        } catch (e) {
+        } catch {
             console.error("Failed to update status");
         }
     };
@@ -49,7 +51,7 @@ export default function PolicePage() {
                 const data = await res.json();
                 setIncidents(data);
             }
-        } catch (e) {
+        } catch {
             console.error("Failed to fetch history");
         }
     };
@@ -61,13 +63,13 @@ export default function PolicePage() {
             const res = await fetch("/api/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ description, userType: "police" }),
+                body: JSON.stringify({ description, userType: "police", image }),
             });
             const data = await res.json();
             setAnalysis(data);
             setView("editor");
             fetchIncidents(); // Refresh list
-        } catch (err) {
+        } catch {
             alert("Analysis failed");
         } finally {
             setIsLoading(false);
@@ -149,7 +151,7 @@ export default function PolicePage() {
                                             // Mock priority if missing, or derive from logic
                                             priority = analysis.classification?.priority || (inc.status === 'PENDING' ? 'High' : 'Low');
                                             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                        } catch (e) { }
+                                        } catch { }
 
                                         return (
                                             <tr key={i}>
@@ -189,7 +191,30 @@ export default function PolicePage() {
                                 onChange={(e) => setDescription(e.target.value)}
                             />
                             <div className={styles.uploadBox}>
-                                📁 Upload Evidence (Audio/Video/Images) - [Mock]
+                                <label htmlFor="police-upload" style={{ cursor: 'pointer', display: 'block', width: '100%', height: '100%' }}>
+                                    {image ? "✅ Evidence Uploaded" : "📁 Upload Evidence (Image)"}
+                                </label>
+                                <input
+                                    id="police-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onloadend = () => setImage(reader.result as string);
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                    hidden
+                                />
+                                {image && (
+                                    <div style={{ marginTop: '0.5rem' }}>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img src={image} alt="Preview" style={{ maxHeight: '100px', borderRadius: '4px' }} />
+                                        <button onClick={(e) => { e.preventDefault(); setImage(null); }} style={{ marginLeft: '1rem', color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Remove</button>
+                                    </div>
+                                )}
                             </div>
                             <button
                                 className={styles.analyzeBtn}
@@ -255,7 +280,7 @@ export default function PolicePage() {
                                             <p><strong>Summary:</strong> {analysisData.summary}</p>
                                         </div>
                                     );
-                                } catch (e) { return <p>No analysis data.</p>; }
+                                } catch { return <p>No analysis data.</p>; }
                             })()}
                         </div>
 
@@ -299,7 +324,7 @@ export default function PolicePage() {
                                         const analysis = JSON.parse(inc.analysis || '{}');
                                         cat = analysis.classification?.type || "General";
                                         priority = analysis.classification?.priority || (inc.status === 'PENDING' ? 'High' : 'Low');
-                                    } catch (e) { }
+                                    } catch { }
 
                                     return (
                                         <tr key={i}>

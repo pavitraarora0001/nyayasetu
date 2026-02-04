@@ -49,7 +49,7 @@ export default function useSpeechRecognition({ onResult, lang = 'en-IN' }: UseSp
                 setRecognition(recog);
             }
         }
-    }, [lang]);
+    }, [lang, onResult]);
 
     const startListening = useCallback(() => {
         if (recognition && !isListening) {

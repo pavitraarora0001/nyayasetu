@@ -18,10 +18,12 @@ export default function PublicPage() {
     const [isTracking, setIsTracking] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [submittedCaseId, setSubmittedCaseId] = useState("");
+    const [currentIncident, setCurrentIncident] = useState<{ description: string, image?: string } | null>(null);
 
     const handleAnalyze = async (description: string, image?: string) => {
         setIsLoading(true);
         setAnalysis(null);
+        setCurrentIncident({ description, image }); // Save for registration
 
         try {
             const res = await fetch("/api/analyze", {
@@ -35,16 +37,43 @@ export default function PublicPage() {
             const data = await res.json();
             setAnalysis(data);
 
-            // Show success modal with case ID
-            if (data.id) {
-                setSubmittedCaseId(data.id);
-                setShowSuccessModal(true);
-            }
+            // Show success modal with case ID (Analysis Only - No ID yet)
+            setSubmittedCaseId("");
         } catch (error) {
             console.error("Analysis failed", error);
             alert(lang === "hi" ? "कुछ गलत हो गया। कृपया पुन: प्रयास करें।" : "Something went wrong. Please try again.");
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleRegister = async () => {
+        if (!analysis) return;
+
+        try {
+            const res = await fetch("/api/incidents", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    description: currentIncident?.description || analysis.summary || "Reported Incident",
+                    type: analysis.classification?.type,
+                    imageUrl: currentIncident?.image || null,
+                    // Pass full analysis for backend processing
+                    analysis: analysis
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error("Registration failed");
+            }
+
+            const data = await res.json();
+            setSubmittedCaseId(data.caseId || data.id);
+            setShowSuccessModal(true);
+
+        } catch (e) {
+            console.error(e);
+            alert("Registration failed");
         }
     };
 
@@ -131,7 +160,14 @@ export default function PublicPage() {
                     <IncidentForm onAnalyze={handleAnalyze} isLoading={isLoading} lang={lang} />
                 ) : (
                     <div className={styles.resultContainer}>
-                        <AnalysisResult analysis={analysis} lang={lang} caseId={submittedCaseId || (analysis as any).id} />
+                        <AnalysisResult
+                            analysis={analysis}
+                            lang={lang}
+                            caseId={showSuccessModal ? submittedCaseId : undefined} // Only show ID after success modal (or we logic it differently)
+                            // Actually, let's keep caseId hidden until they register? 
+                            // OR just pass onRegister to show the button.
+                            onRegister={handleRegister}
+                        />
                         <div className={styles.resetContainer}>
                             <button onClick={() => setAnalysis(null)} className={styles.resetBtn}>
                                 {lang === "hi" ? "एक और घटना रिपोर्ट करें" : "Report Another Incident"}

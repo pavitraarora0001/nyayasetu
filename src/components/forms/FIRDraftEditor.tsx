@@ -101,7 +101,7 @@ export default function FIRDraftEditor({ initialAnalysis, initialFirDraft = "" }
 
             if (res.ok) alert("Draft updated successfully in Database!");
             else alert("Failed to save draft.");
-        } catch (e) {
+        } catch {
             alert("Error saving draft.");
         }
     };

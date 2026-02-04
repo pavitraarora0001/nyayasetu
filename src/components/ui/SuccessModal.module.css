@@ -4,12 +4,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.75);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(4px);
 }
 
 @keyframes fadeIn {
@@ -25,11 +26,16 @@
 .modal {
     background: white;
     border-radius: 16px;
-    padding: 32px;
-    max-width: 500px;
-    width: 90%;
+    padding: 2rem;
+    max-width: 650px;
+    /* Increased width for roadmap */
+    width: 95%;
+    max-height: 90vh;
+    /* Scrollable if needed */
+    overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease;
+    border-top: 6px solid #10b981;
 }
 
 @keyframes slideUp {
@@ -45,84 +51,170 @@
 }
 
 .modal h2 {
-    margin: 0 0 16px 0;
-    color: #10b981;
-    font-size: 24px;
+    margin: 0 0 0.5rem 0;
+    color: #065f46;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .modal p {
-    margin: 0 0 24px 0;
-    color: #6b7280;
-    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    color: #4b5563;
+    line-height: 1.5;
 }
 
 .caseIdBox {
-    background: #f3f4f6;
+    background: #ecfdf5;
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px dashed #10b981;
+    text-align: center;
 }
 
 .caseIdBox label {
     display: block;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 8px;
-    font-size: 14px;
+    font-weight: 700;
+    color: #065f46;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
 }
 
 .caseIdValue {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .caseIdValue code {
-    flex: 1;
     background: white;
-    padding: 12px 16px;
+    padding: 0.75rem 1.5rem;
     border-radius: 8px;
     font-family: 'Courier New', monospace;
-    font-size: 16px;
+    font-size: 1.25rem;
     color: #1f2937;
-    border: 2px solid #e5e7eb;
+    border: 1px solid #d1d5db;
+    font-weight: bold;
 }
 
 .copyBtn {
-    background: #3b82f6;
+    background: #047857;
     color: white;
     border: none;
-    padding: 10px 16px;
+    padding: 0.75rem 1rem;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.9rem;
     transition: background 0.2s;
 }
 
 .copyBtn:hover {
-    background: #2563eb;
+    background: #064e3b;
 }
 
-.instructions {
-    font-size: 14px;
-    color: #9ca3af;
-    margin-bottom: 24px !important;
+.roadmapSection {
+    margin-top: 1.5rem;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.roadmapHeader {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 0.5rem;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.timelineStep {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    position: relative;
+}
+
+.timelineIcon {
+    width: 2rem;
+    height: 2rem;
+    background: #e0e7ff;
+    color: #4f46e5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    z-index: 1;
+}
+
+.timelineContent h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    color: #334155;
+    font-weight: 600;
+}
+
+.timelineContent p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.legalRights {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    background: #fffbeb;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.legalRights strong {
+    display: block;
+    margin-bottom: 0.25rem;
 }
 
 .closeBtn {
     width: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin-top: 1.5rem;
+    background: #1f2937;
     color: white;
     border: none;
-    padding: 14px;
+    padding: 1rem;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: background 0.2s;
 }
 
 .closeBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    background: #111827;
+}
+
+.constRef {
+    display: inline-block;
+    background: #e2e8f0;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-left: 0.5rem;
 }

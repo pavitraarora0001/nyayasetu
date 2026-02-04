@@ -77,7 +77,7 @@ export async function analyzeIncident(description: string, imageBase64?: string)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function draftFIR(description: string, analysis: any) {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const prompt = `
       You are an expert police officer drafting a First Information Report (FIR) under Indian Law (BNS/IPC).
@@ -100,6 +100,7 @@ export async function draftFIR(description: string, analysis: any) {
     return response.text();
   } catch (error) {
     console.error('FIR Drafting Failed:', error);
+    // Return a fallback or rethrow
     throw new Error('Failed to draft FIR');
   }
 }

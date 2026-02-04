@@ -38,8 +38,7 @@
 
 .text {
     line-height: 1.6;
-    color: #1f2937 !important;
-    /* Force dark gray */
+    color: var(--color-text-main);
 }
 
 .registeredBanner {
@@ -60,6 +59,16 @@
 
 .registeredBanner p {
     font-size: 1.25rem;
+}
+
+/* Force dark text on light cards regardless of theme */
+.cardDanger h4,
+.cardDanger p,
+.cardSafe h4,
+.cardSafe p,
+.cardNeutral h4,
+.cardNeutral p {
+    color: #111827 !important;
 }
 
 .visualAnalysis {

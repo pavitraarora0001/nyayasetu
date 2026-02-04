@@ -28,7 +28,15 @@ export default function PolicePage() {
             await fetch(`/api/incidents/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
+                body: JSON.stringify({
+                    status: newStatus,
+                    // Assign current officer details on acceptance
+                    ...(newStatus === 'ACCEPTED' && {
+                        officerId: 'OFF-8821', // Mock ID
+                        officerName: 'Officer Sharma',
+                        policeStation: 'Connaught Place'
+                    })
+                })
             });
             fetchIncidents(); // Refresh
             if (view === 'case-detail') setView('dashboard');

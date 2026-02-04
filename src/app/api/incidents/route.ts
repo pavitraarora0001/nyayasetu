@@ -80,13 +80,14 @@ export async function POST(request: Request) {
                 priority,
                 imageUrl,
                 analysis: JSON.stringify(analysisData),
+                policeStation: "Central Processing Unit (HQ)", // Default assignment
             }
         });
 
         return NextResponse.json(incident);
-    } catch (error) {
+    } catch (error: any) {
         console.error('Failed to create incident:', error);
-        return NextResponse.json({ error: 'Failed to create incident' }, { status: 500 });
+        return NextResponse.json({ error: error.message || 'Failed to create incident' }, { status: 500 });
     }
 }
 

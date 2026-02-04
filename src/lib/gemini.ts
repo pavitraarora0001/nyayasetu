@@ -11,40 +11,51 @@ export async function analyzeIncident(description: string, imageBase64?: string)
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    const prompt = `
-      You are an expert legal AI assistant for Indian Law (BNS/IPC). 
-      Analyze the following incident description and provide a structured JSON output.
+      You are a Senior Legal Expert and Station House Officer(SHO) in the Indian Police Force.
+      Your task is to analyze the incident description and provide a strictly legal classification under the Bharatiya Nyaya Sanhita(BNS) 2023 and Indian Penal Code(IPC).
       
-      Incident: "${description}"
+      CRITICAL INSTRUCTIONS:
+    1. ** Exhaustive Mapping **: Identify ALL potential sections applicable.Do not be conservative.If it looks like theft, include Theft.If force was used, include Robbery / Snatching.
+      2. ** BNS & IPC **: For every offense, provide the BNS 2023 Section AND the corresponding legacy IPC Section.
+      3. ** Constitutionality **: Ensure all punishments mentioned are legally accurate as per the latest Sanhita.
+      4. ** No "Unknowns" **: If details are vague, assume the most common scenario for such a complaint and provide sections for that(e.g., for "phone lost", assume "Theft" or "Lost Property" sections).
+    5. ** Never Return Empty **: You must provide at least one relevant section if the text describes any form of grievance.
       
-      Output Format (JSON only):
-      {
-        "summary": "Brief professional summary of the user's report.",
+      Incident Report: "${description}"
+      
+      Output Format(Strict JSON):
+    {
+      "summary": "Professional police summary of facts. (e.g., 'The complainant alleges theft of mobile phone...')",
         "classification": {
-          "type": "Category (e.g., Theft, Assault, Cyber, Missing Person)",
-          "cognizable": boolean,
-          "fir_required": boolean,
-          "arrest_without_warrant": boolean,
-          "priority": "High/Medium/Low"
+        "type": "Specific Offense (e.g., Snatching / Theft / Assault)",
+          "cognizable": true,
+            "fir_required": true,
+              "arrest_without_warrant": true,
+                "priority": "High"
+      },
+      "sections": [
+        {
+          "section": "e.g., 304 BNS (Snatching)",
+          "law": "BNS",
+          "title": "Snatching",
+          "punishment": "Imprisonment up to 3 years and fine"
         },
-        "sections": [
-          {
-            "section": "Number (e.g., 303(2))",
-            "law": "BNS or IPC",
-            "title": "Title of the section",
-            "punishment": "Description of punishment"
-          }
-        ],
+        {
+          "section": "e.g., 379 IPC (Theft)",
+          "law": "IPC",
+          "title": "Punishment for theft",
+          "punishment": "Imprisonment up to 3 years or fine"
+        }
+      ],
         "guidance": {
-          "immediate_action": "What the user should do right now",
-          "evidence_handling": "How to preserve evidence",
-          "legal_steps": "Next legal steps"
-        },
-        "missing_facts": ["List of critical information missing from the report"],
-        "confidence_score": "High/Medium/Low",
-        "visual_analysis": "If an image is provided, describe relevant forensic details, else return null"
-      }
-    `;
+        "immediate_action": "Police action required (e.g., Deploy team to spot, track IMEI)",
+          "evidence_handling": "e.g., Collect CCTV footage, preserving crime scene",
+            "legal_steps": "e.g., Register FIR immediately under 173 BNSS"
+      },
+      "missing_facts": ["Time of incident", "Description of accused"],
+        "confidence_score": "High",
+          "visual_analysis": "null"
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const parts: any[] = [{ text: prompt }];

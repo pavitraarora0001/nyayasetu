@@ -49,7 +49,8 @@ export default function useSpeechRecognition({ onResult, lang = 'en-IN' }: UseSp
                 setRecognition(recog);
             }
         }
-    }, [lang, onResult]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lang]);
 
     const startListening = useCallback(() => {
         if (recognition && !isListening) {

@@ -10,8 +10,16 @@ export async function POST(
         // Await params correctly for Next.js 15+ 
         const { id } = await params;
 
-        const incident = await prisma.incident.findUnique({
-            where: { id }
+        // Check if id is a valid MongoDB ObjectID (24 hex chars)
+        const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+
+        const incident = await prisma.incident.findFirst({
+            where: {
+                OR: [
+                    isObjectId ? { id } : {},
+                    { caseId: id }
+                ]
+            }
         });
 
         if (!incident) {
@@ -24,7 +32,7 @@ export async function POST(
         );
 
         const updatedIncident = await prisma.incident.update({
-            where: { id },
+            where: { id: incident.id },
             data: {
                 firDraft,
                 status: 'DRAFTING'

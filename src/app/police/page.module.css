@@ -353,10 +353,14 @@
 }
 
 .detailContent {
-    background: var(--color-background);
+    background: #f1f5f9;
+    /* Light Gray/Slate-100 */
+    color: #0f172a;
+    /* Dark Slate-900 */
     padding: 1rem;
     border-radius: 0.5rem;
     line-height: 1.6;
+    border: 1px solid #e2e8f0;
 }
 
 .jsonBox {

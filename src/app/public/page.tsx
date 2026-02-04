@@ -64,16 +64,17 @@ export default function PublicPage() {
             });
 
             if (!res.ok) {
-                throw new Error("Registration failed");
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || `Server Error ${res.status}`);
             }
 
             const data = await res.json();
             setSubmittedCaseId(data.caseId || data.id);
             setShowSuccessModal(true);
 
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            alert("Registration failed");
+            alert(`Registration failed: ${e.message}`);
         }
     };
 
@@ -148,7 +149,15 @@ export default function PublicPage() {
                                 <div>
                                     <p><strong>Status:</strong> <span className={styles.statusBadge}>{statusResult.status}</span></p>
                                     <p><strong>Description:</strong> {statusResult.description.substring(0, 60)}...</p>
-                                    <p><small>Last Updated: {new Date(statusResult.updatedAt).toLocaleDateString()}</small></p>
+                                    <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#F0FDF4', borderRadius: '0.5rem', border: '1px solid #BBF7D0' }}>
+                                        <p style={{ color: '#15803D', margin: '0 0 0.25rem 0' }}>
+                                            <strong>👮 Assigned Officer:</strong> {statusResult.officerName || "Pending Assignment"}
+                                        </p>
+                                        <p style={{ color: '#15803D', margin: 0 }}>
+                                            <strong>📍 Police Station:</strong> {statusResult.policeStation || "Central Processing Unit (HQ)"}
+                                        </p>
+                                    </div>
+                                    <p style={{ marginTop: '0.5rem' }}><small>Last Updated: {new Date(statusResult.updatedAt).toLocaleDateString()}</small></p>
                                 </div>
                             )}
                         </div>

@@ -7,8 +7,15 @@ export async function GET(
 ) {
     const params = await props.params;
     try {
-        const incident = await prisma.incident.findUnique({
-            where: { id: params.id }
+        // Check if params.id looks like a Mongo ObjectID or UUID (length > 20)
+        // Actually, just search both columns to be safe.
+        const incident = await prisma.incident.findFirst({
+            where: {
+                OR: [
+                    { id: params.id },
+                    { caseId: params.id }
+                ]
+            }
         });
 
         if (!incident) {

@@ -21,7 +21,14 @@ export async function POST(request: Request) {
         let mockAnalysis: IncidentAnalysis | null = null;
 
         // 1. Try Real AI
-        mockAnalysis = await analyzeIncident(description, image, knowledgeBaseUri);
+        // Use uploaded Knowledge Base URI if provided, otherwise fallback to Global Env URI (Constitution)
+        const finalKnowledgeUri = knowledgeBaseUri || process.env.LEGAL_PDF_URI;
+
+        if (finalKnowledgeUri) {
+            console.log("⚖️ Using Legal Knowledge Base:", finalKnowledgeUri);
+        }
+
+        mockAnalysis = await analyzeIncident(description, image, finalKnowledgeUri);
 
         // 2. Fallback to Mock Engine if AI fails or no key
         if (!mockAnalysis) {

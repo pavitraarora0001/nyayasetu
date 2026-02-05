@@ -45,22 +45,25 @@ export async function analyzeIncident(description: string, imageBase64?: string,
     const prompt = `
       You are a Senior Legal Expert and Station House Officer (SHO) in the Indian Police Force.
       ${knowledgeBaseUri ? "REFERENCE THE ATTACHED LEGAL DOCUMENT (Constitution/BNS) FOR ACCURACY." : ""}
-      Your task is to analyze the incident description and provide a strictly legal classification under the Bharatiya Nyaya Sanhita (BNS) 2023 and Indian Penal Code (IPC).
+      Your task is to analyze the incident description and provide a strictly legal classification under:
+      1. Bharatiya Nyaya Sanhita (BNS) 2023
+      2. Indian Penal Code (IPC) (Legacy Reference)
+      3. ALL Special & Local Laws (SLL) applicable (e.g., IT Act, POCSO, NDPS, Arms Act, Motor Vehicles Act, etc.)
       
       CRITICAL INSTRUCTIONS:
-      1. **Exhaustive Mapping**: Identify ALL potential sections applicable. Do not be conservative. If it looks like theft, include Theft. If force was used, include Robbery/Snatching.
-      2. **BNS & IPC**: For every offense, provide the BNS 2023 Section AND the corresponding legacy IPC Section.
-      3. **Constitutionality**: Ensure all punishments mentioned are legally accurate as per the latest Sanhita.
-      4. **No "Unknowns"**: If details are vague, assume the most common scenario for such a complaint and provide sections for that (e.g., for "phone lost", assume "Theft" or "Lost Property" sections).
+      1. **Exhaustive & Specific Mapping**: Identify ALL potential sections applicable. Do not be conservative. Cite specific sub-sections (e.g., "Section 66E IT Act" or "Section 303(2) BNS").
+      2. **Dual Classification**: For every BNS offense, provide the corresponding IPC section if it exists.
+      3. **Strict Punishment Verification**: Extract PRECISE punishment from the Act/Sanhita. Mention Cognizability (Cognizable/Non-Cognizable) and Bailable status.
+      4. **No "Unknowns"**: If details are vague, assume the most common scenario for such a complaint and provide sections for that.
       5. **Never Return Empty**: You must provide at least one relevant section if the text describes any form of grievance.
       
       Incident Report: "${description}"
       
       Output Format (Strict JSON):
       {
-        "summary": "Professional police summary of facts. (e.g., 'The complainant alleges theft of mobile phone...')",
+        "summary": "Professional police summary of leading facts.",
         "classification": {
-          "type": "Specific Offense (e.g., Snatching / Theft / Assault)",
+          "type": "Specific Offense (e.g., Cyber Stalking / Snatching / POCSO)",
           "cognizable": true,
           "fir_required": true,
           "arrest_without_warrant": true,
@@ -68,24 +71,24 @@ export async function analyzeIncident(description: string, imageBase64?: string,
         },
         "sections": [
           {
-            "section": "e.g., 303(2) BNS (Theft)",
-            "law": "BNS",
-            "title": "Theft",
+            "section": "e.g., 66E IT Act",
+            "law": "IT Act",
+            "title": "Violation of Privacy",
             "punishment": "Imprisonment up to 3 years or fine"
           },
           {
-            "section": "e.g., 379 IPC (Theft)",
-            "law": "IPC",
-            "title": "Punishment for theft",
-            "punishment": "Imprisonment up to 3 years or fine"
+            "section": "e.g., 303(2) BNS",
+            "law": "BNS",
+            "title": "Theft (Snatching)",
+            "punishment": "Imprisonment up to 3 years"
           }
         ],
         "guidance": {
-          "immediate_action": "Police action required (e.g., Deploy team to spot, track IMEI)",
-          "evidence_handling": "e.g., Collect CCTV footage, preserving crime scene",
+          "immediate_action": "Police action required (e.g., Seize device, Medical Exam)",
+          "evidence_handling": "e.g., Hash value of digital evidence, Chain of Custody",
           "legal_steps": "e.g., Register FIR immediately under 173 BNSS"
         },
-        "missing_facts": ["Time of incident", "Description of accused"],
+        "missing_facts": ["Time of incident", "Device IP Address"],
         "confidence_score": "High",
         "visual_analysis": "null"
       }

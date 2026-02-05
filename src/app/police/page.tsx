@@ -1,5 +1,7 @@
 "use client";
 
+import { UserButton, useUser } from "@clerk/nextjs";
+
 import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 import FIRDraftEditor from "@/components/forms/FIRDraftEditor";
@@ -7,6 +9,7 @@ import { IncidentAnalysis } from "@/lib/types";
 
 
 export default function PolicePage() {
+    const { user } = useUser();
     const [view, setView] = useState<"dashboard" | "new-case" | "editor" | "case-detail" | "case-history" | "settings">("dashboard");
     const [description, setDescription] = useState("");
     const [image, setImage] = useState<string | null>(null);
@@ -115,11 +118,18 @@ export default function PolicePage() {
                     <button onClick={() => setView("case-history")} className={view === "case-history" ? styles.active : ""}>📂 Case History</button>
                     <button onClick={() => setView("settings")} className={view === "settings" ? styles.active : ""}>⚙️ Settings</button>
                 </nav>
+
+                // ... existing code ...
+
+                // Inside return HTML:
                 <div className={styles.user}>
-                    <div className={styles.avatar}>👮</div>
+                    {/* <div className={styles.avatar}>👮</div> */}
+                    <div style={{ transform: 'scale(1.2)' }}>
+                        <UserButton afterSignOutUrl="/" />
+                    </div>
                     <div>
-                        <p>Officer Sharma</p>
-                        <small>PS: Connaught Place</small>
+                        <p>{user?.fullName || "Officer"}</p>
+                        <small>{user?.primaryEmailAddress?.emailAddress || "Logged In"}</small>
                     </div>
                 </div>
             </aside>

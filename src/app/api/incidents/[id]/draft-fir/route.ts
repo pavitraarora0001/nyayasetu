@@ -4,19 +4,18 @@ import { draftFIR } from '@/lib/gemini';
 
 export async function POST(
     request: Request,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     try {
         // Await params correctly for Next.js 15+ 
-        const { id } = await params;
+        const params = await props.params;
+        const { id } = params;
 
-        // Check if id is a valid MongoDB ObjectID (24 hex chars)
-        const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
-
+        // Simply search both fields to support UUIDs and CaseIDs
         const incident = await prisma.incident.findFirst({
             where: {
                 OR: [
-                    isObjectId ? { id } : {},
+                    { id: id },
                     { caseId: id }
                 ]
             }

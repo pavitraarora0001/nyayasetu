@@ -11,51 +11,53 @@ export async function analyzeIncident(description: string, imageBase64?: string)
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-      You are a Senior Legal Expert and Station House Officer(SHO) in the Indian Police Force.
-      Your task is to analyze the incident description and provide a strictly legal classification under the Bharatiya Nyaya Sanhita(BNS) 2023 and Indian Penal Code(IPC).
+    const prompt = `
+      You are a Senior Legal Expert and Station House Officer (SHO) in the Indian Police Force.
+      Your task is to analyze the incident description and provide a strictly legal classification under the Bharatiya Nyaya Sanhita (BNS) 2023 and Indian Penal Code (IPC).
       
       CRITICAL INSTRUCTIONS:
-    1. ** Exhaustive Mapping **: Identify ALL potential sections applicable.Do not be conservative.If it looks like theft, include Theft.If force was used, include Robbery / Snatching.
-      2. ** BNS & IPC **: For every offense, provide the BNS 2023 Section AND the corresponding legacy IPC Section.
-      3. ** Constitutionality **: Ensure all punishments mentioned are legally accurate as per the latest Sanhita.
-      4. ** No "Unknowns" **: If details are vague, assume the most common scenario for such a complaint and provide sections for that(e.g., for "phone lost", assume "Theft" or "Lost Property" sections).
-    5. ** Never Return Empty **: You must provide at least one relevant section if the text describes any form of grievance.
+      1. **Exhaustive Mapping**: Identify ALL potential sections applicable. Do not be conservative. If it looks like theft, include Theft. If force was used, include Robbery/Snatching.
+      2. **BNS & IPC**: For every offense, provide the BNS 2023 Section AND the corresponding legacy IPC Section.
+      3. **Constitutionality**: Ensure all punishments mentioned are legally accurate as per the latest Sanhita.
+      4. **No "Unknowns"**: If details are vague, assume the most common scenario for such a complaint and provide sections for that (e.g., for "phone lost", assume "Theft" or "Lost Property" sections).
+      5. **Never Return Empty**: You must provide at least one relevant section if the text describes any form of grievance.
       
       Incident Report: "${description}"
       
-      Output Format(Strict JSON):
-    {
-      "summary": "Professional police summary of facts. (e.g., 'The complainant alleges theft of mobile phone...')",
+      Output Format (Strict JSON):
+      {
+        "summary": "Professional police summary of facts. (e.g., 'The complainant alleges theft of mobile phone...')",
         "classification": {
-        "type": "Specific Offense (e.g., Snatching / Theft / Assault)",
+          "type": "Specific Offense (e.g., Snatching / Theft / Assault)",
           "cognizable": true,
-            "fir_required": true,
-              "arrest_without_warrant": true,
-                "priority": "High"
-      },
-      "sections": [
-        {
-          "section": "e.g., 304 BNS (Snatching)",
-          "law": "BNS",
-          "title": "Snatching",
-          "punishment": "Imprisonment up to 3 years and fine"
+          "fir_required": true,
+          "arrest_without_warrant": true,
+          "priority": "High"
         },
-        {
-          "section": "e.g., 379 IPC (Theft)",
-          "law": "IPC",
-          "title": "Punishment for theft",
-          "punishment": "Imprisonment up to 3 years or fine"
-        }
-      ],
+        "sections": [
+          {
+            "section": "e.g., 303(2) BNS (Theft)",
+            "law": "BNS",
+            "title": "Theft",
+            "punishment": "Imprisonment up to 3 years or fine"
+          },
+          {
+            "section": "e.g., 379 IPC (Theft)",
+            "law": "IPC",
+            "title": "Punishment for theft",
+            "punishment": "Imprisonment up to 3 years or fine"
+          }
+        ],
         "guidance": {
-        "immediate_action": "Police action required (e.g., Deploy team to spot, track IMEI)",
+          "immediate_action": "Police action required (e.g., Deploy team to spot, track IMEI)",
           "evidence_handling": "e.g., Collect CCTV footage, preserving crime scene",
-            "legal_steps": "e.g., Register FIR immediately under 173 BNSS"
-      },
-      "missing_facts": ["Time of incident", "Description of accused"],
+          "legal_steps": "e.g., Register FIR immediately under 173 BNSS"
+        },
+        "missing_facts": ["Time of incident", "Description of accused"],
         "confidence_score": "High",
-          "visual_analysis": "null"
-    }
+        "visual_analysis": "null"
+      }
+    `;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const parts: any[] = [{ text: prompt }];

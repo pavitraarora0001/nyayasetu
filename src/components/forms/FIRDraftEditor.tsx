@@ -71,7 +71,8 @@ export default function FIRDraftEditor({ initialAnalysis, initialFirDraft = "" }
                 const data = await res.json();
                 setFirText(data.firDraft);
             } else {
-                alert("Failed to generate FIR");
+                const err = await res.json();
+                alert(`Failed to generate FIR: ${err.error || res.statusText}`);
             }
         } catch (e) {
             console.error(e);

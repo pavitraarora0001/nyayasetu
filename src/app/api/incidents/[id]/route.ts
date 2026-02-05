@@ -64,10 +64,9 @@ export async function DELETE(
 ) {
     const params = await props.params;
     try {
-        // Soft delete by updating status
-        const incident = await prisma.incident.update({
-            where: { id: params.id },
-            data: { status: 'DELETED', updatedAt: new Date() }
+        // Hard delete as requested
+        const incident = await prisma.incident.delete({
+            where: { id: params.id }
         });
 
         return NextResponse.json({ success: true, incident });

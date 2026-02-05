@@ -45,6 +45,17 @@ export default function PolicePage() {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this case? This action cannot be undone.")) return;
+
+        try {
+            await fetch(`/api/incidents/${id}`, { method: 'DELETE' });
+            fetchIncidents();
+        } catch {
+            alert("Failed to delete case");
+        }
+    };
+
 
 
     // Fetch incidents on mount
@@ -175,7 +186,10 @@ export default function PolicePage() {
                                                         {inc.status}
                                                     </span>
                                                 </td>
-                                                <td><button className={styles.viewBtn} onClick={() => handleView(inc)}>View</button></td>
+                                                <td>
+                                                    <button className={styles.viewBtn} onClick={() => handleView(inc)}>View</button>
+                                                    <button className={styles.btnDelete} onClick={() => handleDelete(inc.id)}>Delete</button>
+                                                </td>
                                             </tr>
                                         );
                                     }) : (
@@ -348,7 +362,10 @@ export default function PolicePage() {
                                                     {inc.status}
                                                 </span>
                                             </td>
-                                            <td><button className={styles.viewBtn} onClick={() => handleView(inc)}>View</button></td>
+                                            <td>
+                                                <button className={styles.viewBtn} onClick={() => handleView(inc)}>View</button>
+                                                <button className={styles.btnDelete} onClick={() => handleDelete(inc.id)}>Delete</button>
+                                            </td>
                                         </tr>
                                     );
                                 })}

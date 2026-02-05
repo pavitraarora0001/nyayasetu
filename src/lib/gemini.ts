@@ -1,8 +1,23 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+import { GoogleAIFileManager } from "@google/generative-ai/server";
 
-export async function analyzeIncident(description: string, imageBase64?: string) {
+export async function uploadLegalReference(filePath: string, mimeType: string) {
+  if (!process.env.GEMINI_API_KEY) return null;
+  const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
+
+  try {
+    const uploadResponse = await fileManager.uploadFile(filePath, { mimeType, displayName: "Reference PDF" });
+    console.log(`Uploaded file ${uploadResponse.file.displayName} as: ${uploadResponse.file.uri}`);
+    return uploadResponse.file.uri;
+  } catch (error) {
+    console.error("File upload failed:", error);
+    return null;
+  }
+}
+
+export async function analyzeIncident(description: string, imageBase64?: string, knowledgeBaseUri?: string) {
   if (!process.env.GEMINI_API_KEY) {
     console.warn("⚠️ No GEMINI_API_KEY found.");
     return null;
@@ -11,8 +26,25 @@ export async function analyzeIncident(description: string, imageBase64?: string)
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
+    // Construct the prompt parts
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parts: any[] = [];
+
+    // 1. Add Knowledge Base (Constitution PDF) if available
+    // We expect knowledgeBaseUri to be passed if a file was uploaded
+    if (knowledgeBaseUri) {
+      parts.push({
+        fileData: {
+          mimeType: "application/pdf",
+          fileUri: knowledgeBaseUri
+        }
+      });
+      console.log("📚 Analyzing with Knowledge Base Reference:", knowledgeBaseUri);
+    }
+
     const prompt = `
       You are a Senior Legal Expert and Station House Officer (SHO) in the Indian Police Force.
+      ${knowledgeBaseUri ? "REFERENCE THE ATTACHED LEGAL DOCUMENT (Constitution/BNS) FOR ACCURACY." : ""}
       Your task is to analyze the incident description and provide a strictly legal classification under the Bharatiya Nyaya Sanhita (BNS) 2023 and Indian Penal Code (IPC).
       
       CRITICAL INSTRUCTIONS:
@@ -59,15 +91,14 @@ export async function analyzeIncident(description: string, imageBase64?: string)
       }
     `;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parts: any[] = [{ text: prompt }];
+    parts.push({ text: prompt });
 
     if (imageBase64) {
       // Real Multimodal Input
       parts.push({
         inlineData: {
-          data: imageBase64.split(',')[1] || imageBase64, // Remove header if present
-          mimeType: "image/jpeg", // Defaulting to jpeg, ideally detect from base64 header
+          data: imageBase64.split(',')[1] || imageBase64,
+          mimeType: "image/jpeg",
         },
       });
     }

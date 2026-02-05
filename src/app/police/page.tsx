@@ -15,7 +15,9 @@ export default function PolicePage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [incidents, setIncidents] = useState<any[]>([]);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [selectedIncident, setSelectedIncident] = useState<any>(null);
+    const [legalRefUri, setLegalRefUri] = useState<string | null>(null);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleView = (incident: any) => {
@@ -82,7 +84,12 @@ export default function PolicePage() {
             const res = await fetch("/api/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ description, userType: "police", image }),
+                body: JSON.stringify({
+                    description,
+                    userType: "police",
+                    image,
+                    knowledgeBaseUri: legalRefUri // Pass the reference if active
+                }),
             });
             const data = await res.json();
             setAnalysis(data);
@@ -414,6 +421,50 @@ export default function PolicePage() {
                                     <option>High</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div className={styles.settingsCard}>
+                            <h3>📚 Legal Knowledge Base</h3>
+                            <p style={{ fontSize: '0.9rem', color: '#6B7280', marginBottom: '1rem' }}>
+                                Upload a custom legal document (PDF) to ground the AI analysis in specific laws (e.g., Constitution, Standing Orders).
+                            </p>
+                            <label className={styles.uploadBtnLabel} style={{ display: 'inline-block', padding: '0.5rem 1rem', background: '#3B82F6', color: 'white', borderRadius: '0.375rem', cursor: 'pointer' }}>
+                                {legalRefUri ? "✅ Reference Active (Constitution.pdf)" : "📤 Upload Legal PDF (Constitution/BNS)"}
+                                <input
+                                    type="file"
+                                    accept="application/pdf"
+                                    hidden
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+
+                                        try {
+                                            alert("Uploading Legal Reference... Please wait.");
+                                            const res = await fetch('/api/upload-reference', { method: 'POST', body: formData });
+                                            const data = await res.json();
+                                            if (data.success) {
+                                                setLegalRefUri(data.fileUri);
+                                                alert("Legal Reference Active! AI will now cite this document.");
+                                            } else {
+                                                alert("Upload failed.");
+                                            }
+                                        } catch (err) {
+                                            console.error(err);
+                                            alert("Upload failed.");
+                                        }
+                                    }}
+                                />
+                            </label>
+                            {legalRefUri && (
+                                <button
+                                    onClick={() => setLegalRefUri(null)}
+                                    style={{ marginLeft: '1rem', color: 'red', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>
+                                    Remove Reference
+                                </button>
+                            )}
                         </div>
 
                         <button className={styles.saveBtn} onClick={() => alert('Settings Saved!')}>Save Changes</button>

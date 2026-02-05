@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { description, userType, image, location } = body;
+        const { description, userType, image, location, knowledgeBaseUri } = body;
 
         if (!description) {
             return NextResponse.json(
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
         let mockAnalysis: IncidentAnalysis | null = null;
 
         // 1. Try Real AI
-        mockAnalysis = await analyzeIncident(description, image);
+        mockAnalysis = await analyzeIncident(description, image, knowledgeBaseUri);
 
         // 2. Fallback to Mock Engine if AI fails or no key
         if (!mockAnalysis) {

@@ -9,9 +9,10 @@ import jsPDF from "jspdf";
 interface FIRDraftEditorProps {
     initialAnalysis: IncidentAnalysis;
     initialFirDraft?: string;
+    incidentDescription?: string; // Add description prop
 }
 
-export default function FIRDraftEditor({ initialAnalysis, initialFirDraft = "" }: FIRDraftEditorProps) {
+export default function FIRDraftEditor({ initialAnalysis, initialFirDraft = "", incidentDescription = "" }: FIRDraftEditorProps) {
     const [analysis, setAnalysis] = useState(initialAnalysis);
     const [firText, setFirText] = useState(initialFirDraft);
     const [isGenerating, setIsGenerating] = useState(false);
@@ -63,10 +64,35 @@ export default function FIRDraftEditor({ initialAnalysis, initialFirDraft = "" }
     };
 
     const handleGenerateFIR = async () => {
-        if (!analysis.id) return alert("Save the case first!");
+        // Fallback: If no ID (demo mode), allows generation if description is present
+        if (!analysis.id && !incidentDescription) return alert("Save the case first or ensure description is present!");
+
         setIsGenerating(true);
         try {
-            const res = await fetch(`/api/incidents/${analysis.id}/draft-fir`, { method: "POST" });
+            // Use generic route if passed content directly, or specific route if using DB ID
+            const url = analysis.id && !analysis.id.startsWith('demo-')
+                ? `/api/incidents/${analysis.id}/draft-fir`
+                : `/api/incidents/draft-fir-direct`; // We will use a singular route for both ideally, but let's try the direct body approach
+
+            // Actually, let's just use the ID route but send body data as override
+            const targetUrl = `/api/incidents/${analysis.id || 'new'}/draft-fir`;
+
+            const res = await fetch(targetUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    description: incidentDescription, // Pass from props
+                    analysisData: analysis
+                })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setFirText(data.firDraft);
+            } else {
+                const err = await res.json();
+                alert(`Failed to generate FIR: ${err.error || res.statusText}`);
+            }
             if (res.ok) {
                 const data = await res.json();
                 setFirText(data.firDraft);

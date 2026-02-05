@@ -262,7 +262,7 @@ export default function PolicePage() {
                             <button onClick={() => setView("new-case")}>← Back</button>
                             <span>Drafting Mode</span>
                         </div>
-                        <FIRDraftEditor initialAnalysis={analysis} />
+                        <FIRDraftEditor initialAnalysis={analysis} incidentDescription={description} />
                     </div>
                 )}
 
